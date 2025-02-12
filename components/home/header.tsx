@@ -23,15 +23,15 @@ export default function HeaderView({ page, sub }: { page: string, sub?: string |
                                 <li><Link href="/myprofile" className={`${page === 'user' ? 'current' : ''}`}>User Panel</Link>
                                     <ul>
                                         <li><Link href="/myprofile" className={`${sub === 'myprofile' ? 'active' : ''}`}>User Profile</Link></li>
-                                        <li><a href="/bookmarks">Bookmark Listing</a></li>
-                                        <li><a href="/upload">Add New Property</a></li>
-                                        <li><a href="/password">Change Password</a></li>
+                                        <li><Link href="/bookmarks">Bookmark Listing</Link></li>
+                                        <li><Link href="/upload">Add New Property</Link></li>
+                                        <li><Link href="/password">Change Password</Link></li>
                                     </ul>
                                 </li>
                                 <li><Link href="/agents" className={`${page === 'agents' ? 'current' : ''}`}>Agents</Link>
                                 </li>
 
-                                <li><a href="/contact" className={`${page === 'contact' ? 'current' : ''}`}>Contact</a></li>
+                                <li><Link href="/contact" className={`${page === 'contact' ? 'current' : ''}`}>Contact</Link></li>
                             </ul>
                         </nav>
                         <div className="clearfix"></div>
