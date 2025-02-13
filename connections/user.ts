@@ -41,8 +41,7 @@ export class UserRegistration {
             if (api.ok) {
                 const data = await api.json() as Tokens
                 setVariables(data)
-                await this.fetchUser()
-                return data
+                return await this.fetchUser()
             }
             return this.getExtractError(api)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -64,8 +63,7 @@ export class UserRegistration {
             if (api.ok) {
                 const data = await api.json() as Tokens
                 setVariables(data)
-                await this.fetchUser()
-                return data
+                return this.fetchUser()
             }
             return this.getExtractError(api)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -79,12 +77,12 @@ export class UserRegistration {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorizaation": "bearer " + getVariables().accessTokens,
+                    "Authorization": "Bearer " + getVariables().accessTokens,
                     "X-device-id": getDeviceId(),
                 }
             });
             if (api.ok) {
-                setUser(await api.json())
+                return setUser(await api.json())
             }
             if (api.status == 401) {
                 if (retry) return this.requestNewTokens()
@@ -102,14 +100,14 @@ export class UserRegistration {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorizaation": "bearer " + getVariables().refreshTokens,
+                    "Authorization": "Bearer " + getVariables().refreshTokens,
                     "X-device-id": getDeviceId(),
                 }
             });
             if (api.ok) {
                 const data = await api.json() as Tokens
                 setVariables(data)
-                return this.fetchUser(false)
+                return await this.fetchUser(false)
             }
             return this.getExtractError(api)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -122,5 +120,8 @@ export const useUserState = create<User>(() => ({
     firstName: "",
     lastName: "",
     email: "",
-    idNumber: ""
+    phone: "",
+    message: "",
+    idNumber: "",
+    userTitle: ""
 }))

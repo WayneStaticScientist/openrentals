@@ -8,7 +8,7 @@ export default function Bookmarks() {
     return (
         <>
             <div id="wrapper">
-                <HeaderView page='listing' />
+                <HeaderView page='listing' sub={'bookmarks'} />
                 <BannerPage title={'All Houses'} path={[
                     {
                         root: "/",
@@ -21,7 +21,7 @@ export default function Bookmarks() {
                 ]} />
                 <div className="container">
                     <div className="row">
-                        <ProfileReview />
+                        <ProfileReview page='bookmarks' />
                         <div className="col-md-9">
                             <table className="manage-table bookmarks-table responsive-table">
                                 <tbody>

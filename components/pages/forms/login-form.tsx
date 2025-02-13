@@ -33,7 +33,7 @@ export default function LoginForm() {
                                 <h3>Welcome Back Sign in to Continue</h3>
                                 <span>Dont Have an Account? <Link href="/register">Sign Up!</Link></span>
                             </div>
-                            <form method="post" className="login">
+                            <div className="login">
                                 <div className="form-row form-row-wide">
                                     <input type="text" className="input-text" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} />
                                 </div>
@@ -56,7 +56,7 @@ export default function LoginForm() {
                                     <button className="button social-login via-gplus"><i className="icon-brand-google"></i> Google</button>
                                     <button className="button social-login via-facebook"><i className="icon-brand-twitter"></i> Twitter</button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>

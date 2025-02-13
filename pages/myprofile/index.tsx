@@ -1,10 +1,37 @@
 import ProfileReview from '@/components/pages/widgets/profile-review';
+import { useUserState } from '@/connections/user';
+import { userLoggedIn } from '@/functions/device';
 import dynamic from 'next/dynamic';
-import React from 'react'
+import Router from 'next/router';
+import React, { useEffect, useState } from 'react'
 const HeaderView = dynamic(() => import("@/components/home/header"), { ssr: false });
 const BannerPage = dynamic(() => import('@/components/pages/banner-page'), { ssr: false });
 
 export default function MyProfile() {
+    const user = useUserState();
+    const [loggedIn, setLoggedIn] = useState(false)
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [userTitle, setUserTitle] = useState("")
+    const [email, setEmail] = useState("")
+    const [phone, setPhone] = useState("")
+    const [message, setMessage] = useState("")
+    useEffect(() => {
+        if (userLoggedIn()) {
+            setLoggedIn(true)
+            setFirstName(user.firstName);
+            setLastName(user.lastName)
+            setUserTitle(user.userTitle)
+            setPhone(user.phone)
+            setMessage(user.message)
+            setEmail(user.email)
+        } else {
+            Router.push("/login")
+        }
+    }, [])
+    if (!loggedIn) {
+        return <></>
+    }
     return (
         <>
             <div id="wrapper">
@@ -21,7 +48,7 @@ export default function MyProfile() {
                 ]} />
                 <div className="container">
                     <div className="row">
-                        <ProfileReview />
+                        <ProfileReview page='myprofile' />
                         <div className="col-md-9">
                             <div className="utf-user-profile-item">
                                 <div className="utf-submit-page-inner-box">
@@ -29,25 +56,30 @@ export default function MyProfile() {
                                     <div className="content with-padding">
                                         <div className="col-md-6">
                                             <label>Your Name</label>
-                                            <input value="John Williams" type="text" />
+                                            <input value={firstName} type="text" />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label>Your LastName</label>
+                                            <input value={lastName} type="text" />
                                         </div>
                                         <div className="col-md-6">
                                             <label>Your Title</label>
-                                            <input value="Agent In Afghanistan" type="text" />
+                                            <input value={userTitle} type="text" />
                                         </div>
                                         <div className="col-md-6">
                                             <label>Phone Number</label>
-                                            <input value="(+21) 124 123 4546" type="text" />
+                                            <input value={phone} type="text" />
                                         </div>
                                         <div className="col-md-6">
                                             <label>Email Address</label>
-                                            <input value="info@example.com" type="text" />
+                                            <input value={email} type="text" />
                                         </div>
                                         <div className="col-md-12 margin-bottom-0">
                                             <label>Message</label>
                                             <textarea name="about" id="about" cols={20}
                                                 rows={5}>
-                                                Lorem Ipsum is simply dummy text of printing and type setting industry Lorem Ipsum been industry standard dummy text ever since. Lorem Ipsum is simply dummy text of printing and type setting industry Lorem Ipsum been industry standard dummy text ever since.</textarea>
+                                                {message}
+                                            </textarea>
                                         </div>
                                     </div>
                                 </div>

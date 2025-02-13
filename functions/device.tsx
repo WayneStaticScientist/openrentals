@@ -26,11 +26,12 @@ export function getVariables(): Tokens {
     }
 }
 export function setUser(user: object) {
-    localStorage.setItem(`${process.env.c}`, JSON.stringify(user))
+    localStorage.setItem(`${process.env.NEXT_PUBLIC_GUEST}`, JSON.stringify(user))
+    return user
 }
 export function userLoggedIn(): boolean {
     try {
-        const data = localStorage.getItem(`${process.env.c}`)
+        const data = localStorage.getItem(`${process.env.NEXT_PUBLIC_GUEST}`)
         if (!data) return false
         const user: User = JSON.parse(data)
         if (!user) return false

@@ -9,5 +9,8 @@ export interface User {
     firstName: string,
     lastName: string
     email: string
+    message: string
+    phone: string
     idNumber: string
+    userTitle: string
 }
