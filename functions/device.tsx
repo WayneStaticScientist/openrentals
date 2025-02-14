@@ -42,3 +42,8 @@ export function userLoggedIn(): boolean {
         return false
     }
 }
+export function clearSavedLogss() {
+    localStorage.removeItem(`${process.env.NEXT_PUBLIC_AKEY}`)
+    localStorage.removeItem(`${process.env.NEXT_PUBLIC_RKEY}`)
+    localStorage.removeItem(`${process.env.NEXT_PUBLIC_GUEST}`)
+}

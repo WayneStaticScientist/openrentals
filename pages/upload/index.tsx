@@ -5,7 +5,7 @@ import { getDeviceId, getVariables, userLoggedIn } from '@/functions/device';
 import { showError, showSuccess } from '@/functions/toast';
 import dynamic from 'next/dynamic';
 import Router from 'next/router';
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { FileUploader } from 'react-drag-drop-files';
 import { CgSpinner } from 'react-icons/cg';
 import { ToastContainer } from 'react-toastify';
@@ -14,7 +14,7 @@ const BannerPage = dynamic(() => import('@/components/pages/banner-page'), { ssr
 const fileTypes = ["JPG", "PNG", "GIF"];
 export default function UploadPage() {
     const user = useUserState();
-    const selectedFiles: File[] = []
+    const selectedFiles = useRef<File[]>([])
     const [area, setArea] = useState('')
     const [city, setCity] = useState("")
     const [state, setState] = useState("")
@@ -70,8 +70,8 @@ export default function UploadPage() {
         formData.append("swimming", swimming ? '0' : '1')
         formData.append("studyRoom", studyRoom ? '0' : '1')
         formData.append("electricity", electricity ? '0' : '1')
-        for (const f of selectedFiles) {
-            formData.append("files[]", f)
+        for (const f of selectedFiles.current) {
+            formData.append("files", f)
         }
         setLoading(true)
         try {
@@ -85,7 +85,8 @@ export default function UploadPage() {
             });
             setLoading(false)
             if (response.ok) {
-                return showSuccess("The property has been successfully")
+                showSuccess("The property has been successfully")
+                Router.replace("/uploads")
             }
             if (response.status === 400 || response.status === 401 || response.status >= 500) {
                 const { message } = await response.json()
@@ -98,8 +99,9 @@ export default function UploadPage() {
         setLoading(false)
     }
     const handleChange = (file: File[]) => {
-        selectedFiles.push(...file)
-        setFileList(selectedFiles.map((e, i) => {
+
+        selectedFiles.current.push(...file)
+        setFileList(selectedFiles.current.map((e, i) => {
             return <div key={i} className='flex p-3'>{e.name}</div>
         }))
     };
@@ -209,7 +211,8 @@ export default function UploadPage() {
                                     <h3>Property Gallery</h3>
                                     <div className="content with-padding">
                                         <div className="col-md-12 submit-section">
-                                            <FileUploader multiple handleChange={handleChange} name="file" types={fileTypes} />
+                                            <FileUploader multiple handleChange={handleChange} name="file" types={fileTypes}
+                                            />
                                             {fileList}
                                         </div>
                                     </div>
@@ -331,7 +334,9 @@ export default function UploadPage() {
                                         </div>
                                         <div className="col-md-4">
                                             <h5>Phone Number</h5>
-                                            <input type="text" placeholder="Phone Number" value={phone} />
+                                            <input type="text" placeholder="Phone Number" value={phone} onChange={(e) =>
+                                                setPhone(e.target.value)
+                                            } />
                                         </div>
                                     </div>
                                 </div>
@@ -347,7 +352,6 @@ export default function UploadPage() {
                         </div>
                     </div>
                 </div>
-
                 <FooterView />
             </div >
         </>
