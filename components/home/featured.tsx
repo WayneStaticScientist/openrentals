@@ -1,6 +1,9 @@
+import { Property } from '@/connections/interfaces'
+import { formatAmount } from '@/functions/formats'
+import Link from 'next/link'
 import React from 'react'
 
-export default function FeaturedComponents() {
+export default function FeaturedComponents({ properties }: { properties: Property[] }) {
     return (
         <>
             <div className="container">
@@ -14,125 +17,26 @@ export default function FeaturedComponents() {
                     </div>
                     <div className="col-md-12">
                         <div className="carousel">
-                            {/* <!-- Listing Item --> */}
-                            <div className="utf-carousel-item-area">
-                                <div className="utf-listing-item compact">
-                                    <a href="single-property-page-2.html" className="utf-smt-listing-img-container">
-                                        <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For Sale</span> </div>
-                                        <div className="utf-listing-img-content-item">
-                                            <span className="utf-listing-compact-title-item">Renovated Luxury Apartment <i>$18,000/mo</i></span>
+                            {
+                                properties.map((e, i) => {
+                                    return <div className="utf-carousel-item-area" key={i}>
+                                        <div className="utf-listing-item compact">
+                                            <Link href={`/catalogs?q=${e._id}`} className="utf-smt-listing-img-container">
+                                                <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For Sale</span> </div>
+                                                <div className="utf-listing-img-content-item">
+                                                    <span className="utf-listing-compact-title-item">{e.propertyTitle} <i>${formatAmount(e.price, 3)}</i></span>
+                                                </div>
+                                                <img src="images/listing-01.jpg" alt="" />
+                                                <ul className="listing-hidden-content">
+                                                    <li><i className="fa fa-bed"></i> Beds <span>{e.bedrooms}</span></li>
+                                                    <li><i className="icon-feather-codepen"></i> Baths <span>{e.bathrooms}</span></li>
+                                                    <li><i className="fa fa-arrows-alt"></i> Sq M <span>{e.area}</span></li>
+                                                </ul>
+                                            </Link>
                                         </div>
-                                        <img src="images/listing-01.jpg" alt="" />
-                                        <ul className="listing-hidden-content">
-                                            <li><i className="fa fa-bed"></i> Beds <span>3</span></li>
-                                            <li><i className="icon-feather-codepen"></i> Baths <span>2</span></li>
-                                            <li><i className="fa fa-car"></i> Garages <span>2</span></li>
-                                            <li><i className="fa fa-arrows-alt"></i> Sq Ft <span>780</span></li>
-                                        </ul>
-                                    </a>
-                                </div>
-                            </div>
-                            {/* <!-- Listing Item / End --> */}
-
-                            {/* <!-- Listing Item --> */}
-                            <div className="utf-carousel-item-area">
-                                <div className="utf-listing-item compact">
-                                    <a href="single-property-page-2.html" className="utf-smt-listing-img-container">
-                                        <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For Sale</span> </div>
-                                        <div className="utf-listing-img-content-item">
-                                            <span className="utf-listing-compact-title-item">Renovated Luxury Apartment <i>$18,000/mo</i></span>
-                                        </div>
-                                        <img src="images/listing-02.jpg" alt="" />
-                                        <ul className="listing-hidden-content">
-                                            <li><i className="fa fa-bed"></i> Beds <span>3</span></li>
-                                            <li><i className="icon-feather-codepen"></i> Baths <span>2</span></li>
-                                            <li><i className="fa fa-car"></i> Garages <span>2</span></li>
-                                            <li><i className="fa fa-arrows-alt"></i> Sq Ft <span>780</span></li>
-                                        </ul>
-                                    </a>
-                                </div>
-                            </div>
-                            {/* <!-- Listing Item / End --> */}
-
-                            {/* <!-- Listing Item --> */}
-                            <div className="utf-carousel-item-area">
-                                <div className="utf-listing-item compact">
-                                    <a href="single-property-page-2.html" className="utf-smt-listing-img-container">
-                                        <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For Sale</span> </div>
-                                        <div className="utf-listing-img-content-item">
-                                            <span className="utf-listing-compact-title-item">Renovated Luxury Apartment <i>$18,000/mo</i></span>
-                                        </div>
-                                        <img src="images/listing-03.jpg" alt="" />
-                                        <ul className="listing-hidden-content">
-                                            <li><i className="fa fa-bed"></i> Beds <span>3</span></li>
-                                            <li><i className="icon-feather-codepen"></i> Baths <span>2</span></li>
-                                            <li><i className="fa fa-car"></i> Garages <span>2</span></li>
-                                            <li><i className="fa fa-arrows-alt"></i> Sq Ft <span>780</span></li>
-                                        </ul>
-                                    </a>
-                                </div>
-                            </div>
-                            {/* <!-- Listing Item / End --> */}
-
-                            {/* <!-- Listing Item --> */}
-                            <div className="utf-carousel-item-area">
-                                <div className="utf-listing-item compact">
-                                    <a href="single-property-page-2.html" className="utf-smt-listing-img-container">
-                                        <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For Sale</span> </div>
-                                        <div className="utf-listing-img-content-item">
-                                            <span className="utf-listing-compact-title-item">Renovated Luxury Apartment <i>$18,000/mo</i></span>
-                                        </div>
-                                        <img src="images/listing-04.jpg" alt="" />
-                                        <ul className="listing-hidden-content">
-                                            <li><i className="fa fa-bed"></i> Beds <span>3</span></li>
-                                            <li><i className="icon-feather-codepen"></i> Baths <span>2</span></li>
-                                            <li><i className="fa fa-car"></i> Garages <span>2</span></li>
-                                            <li><i className="fa fa-arrows-alt"></i> Sq Ft <span>780</span></li>
-                                        </ul>
-                                    </a>
-                                </div>
-                            </div>
-                            {/* <!-- Listing Item / End --> */}
-
-                            {/* <!-- Listing Item --> */}
-                            <div className="utf-carousel-item-area">
-                                <div className="utf-listing-item compact">
-                                    <a href="single-property-page-2.html" className="utf-smt-listing-img-container">
-                                        <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For Sale</span> </div>
-                                        <div className="utf-listing-img-content-item">
-                                            <span className="utf-listing-compact-title-item">Renovated Luxury Apartment <i>$18,000/mo</i></span>
-                                        </div>
-                                        <img src="images/listing-05.jpg" alt="" />
-                                        <ul className="listing-hidden-content">
-                                            <li><i className="fa fa-bed"></i> Beds <span>3</span></li>
-                                            <li><i className="icon-feather-codepen"></i> Baths <span>2</span></li>
-                                            <li><i className="fa fa-car"></i> Garages <span>2</span></li>
-                                            <li><i className="fa fa-arrows-alt"></i> Sq Ft <span>780</span></li>
-                                        </ul>
-                                    </a>
-                                </div>
-                            </div>
-                            {/* <!-- Listing Item / End --> */}
-
-                            {/* <!-- Listing Item --> */}
-                            <div className="utf-carousel-item-area">
-                                <div className="utf-listing-item compact">
-                                    <a href="single-property-page-2.html" className="utf-smt-listing-img-container">
-                                        <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For Sale</span> </div>
-                                        <div className="utf-listing-img-content-item">
-                                            <span className="utf-listing-compact-title-item">Renovated Luxury Apartment <i>$18,000/mo</i></span>
-                                        </div>
-                                        <img src="images/listing-06.jpg" alt="" />
-                                        <ul className="listing-hidden-content">
-                                            <li><i className="fa fa-bed"></i> Beds <span>3</span></li>
-                                            <li><i className="icon-feather-codepen"></i> Baths <span>2</span></li>
-                                            <li><i className="fa fa-car"></i> Garages <span>2</span></li>
-                                            <li><i className="fa fa-arrows-alt"></i> Sq Ft <span>780</span></li>
-                                        </ul>
-                                    </a>
-                                </div>
-                            </div>
-                            {/* <!-- Listing Item / End --> */}
+                                    </div>
+                                })
+                            }
                         </div>
                     </div>
                     {/* <!-- Carousel / End --> */}

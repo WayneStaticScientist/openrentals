@@ -1,12 +1,17 @@
-import React from 'react'
+import { useRouter } from 'next/router';
+import React, { useState } from 'react'
 
-export default function SearchContainer() {
+export default function SearchContainer({ cities, types }: { cities: string[], types: string[] }) {
+    const router = useRouter()
+    const [keywords, setKeyWords] = useState("")
+    const [city, setCity] = useState("")
+    const [type, setType] = useState("")
     return (
         <div className="utf-main-search-container-area inner-map-search-block inner-search-item">
             <div className="container">
                 <div className="row">
                     <div className="col-md-12">
-                        <form className="utf-main-search-form-item">
+                        <div className="utf-main-search-form-item">
                             {/* <!-- Type --> */}
                             <div className="utf-search-type-block-area margin-top-35">
                                 <div className="search-type">
@@ -26,31 +31,25 @@ export default function SearchContainer() {
                                 <div className="row with-forms">
                                     {/* <!-- Status --> */}
                                     <div className="col-md-2 col-sm-4">
-                                        <select data-placeholder="Select City" title="Select City" className="utf-chosen-select-single-item">
-                                            <option>Select City</option>
-                                            <option>Afghanistan</option>
-                                            <option>Albania</option>
-                                            <option>Algeria</option>
-                                            <option>Brazil</option>
-                                            <option>Burundi</option>
-                                            <option>Bulgaria</option>
-                                            <option>California</option>
-                                            <option>Germany</option>
-                                            <option>Grenada</option>
-                                            <option>Guatemala</option>
-                                            <option>Iceland</option>
+                                        <select data-placeholder="Select City" title="Select City"
+                                            value={city} onChange={(e) => setCity(e.target.value)}
+                                            className="utf-chosen-select-single-item">
+                                            <option value={""}>all cities</option>
+                                            {cities.map((e, i) => {
+                                                return <option key={i} value={e}>{e}</option>
+                                            })}
                                         </select>
                                     </div>
 
                                     {/* <!-- Property Type --> */}
                                     <div className="col-md-2 col-sm-4">
-                                        <select data-placeholder="Property Type" className="utf-chosen-select-single-item">
-                                            <option>Property Type</option>
-                                            <option>Residential</option>
-                                            <option>Apartments</option>
-                                            <option>Houses</option>
-                                            <option>Commercial</option>
-                                            <option>Land</option>
+                                        <select data-placeholder="Property Type"
+                                            value={type} onChange={(e) => setType(e.target.value)}
+                                            className="utf-chosen-select-single-item">
+                                            <option value={""}>any types</option>
+                                            {types.map((e, i) => {
+                                                return <option key={i} value={e}>{e}</option>
+                                            })}
                                         </select>
                                     </div>
 
@@ -64,19 +63,28 @@ export default function SearchContainer() {
                                     </div>
 
                                     {/* <!-- Main Search Input --> */}
+
                                     <div className="col-md-6">
                                         <div className="utf-main-search-input-item">
-                                            <input type="text" placeholder="Enter Keywords..." value="" />
-                                            <button className="button"><i className="fa fa-search"></i> Search</button>
+                                            <input type="text" placeholder="Enter Keywords..." value={keywords}
+                                                onChange={(e) => setKeyWords(e.target.value)} />
+                                            <button className="button"
+                                                onClick={() => {
+                                                    return router.push({
+                                                        pathname: '/listings',
+                                                        search: `?search=true&keywords=${keywords}&city=${city}&propertyType=${type}`, // Or use params.toString() if you built a URLSearchParams
+                                                    });
+                                                }}><i className="fa fa-search"></i> Search</button>
                                         </div>
                                     </div>
                                 </div>
                                 {/* <!-- Row With Forms / End --> */}
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     )
 }

@@ -18,6 +18,7 @@ export interface Property {
     address: string
     area: string
     bathrooms: number
+    views: number
     bedrooms: number
     _id: string
     ceiling: string
@@ -39,6 +40,7 @@ export interface Property {
     state: string
     stoves: string
     studyRoom: string
+    hidden: boolean
     swimming: string
     tiles: string
     uploader: string
@@ -51,4 +53,24 @@ export interface PropertyList {
 export interface PropertyPackage {
     owned: boolean
     property: Property
+}
+export interface GeolocationInterface {
+    latitude: number,
+    longitude: number
+}
+export interface SearchFilter {
+    uploader: string
+    city: string
+    propertyType: string
+    propertystate: string
+    keywords: string
+    page: number
+}
+export interface ListingInfo {
+    cities: string[]
+    type: string[]
+}
+export interface PropertyWrapper {
+    properties: Property[]
+    listingInfo: ListingInfo
 }

@@ -13,6 +13,30 @@ const HeaderView = dynamic(() => import("@/components/home/header"), { ssr: fals
 const BannerPage = dynamic(() => import('@/components/pages/banner-page'), { ssr: false });
 const fileTypes = ["JPG", "PNG", "GIF"];
 export default function UploadPage() {
+    const [latitude, setLatitude] = useState(0)
+    const [longitude, setLongitude] = useState(0)
+    const getUserLocation = () => {
+        // if geolocation is supported by the users browser
+        if (navigator.geolocation) {
+            // get the current users location
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    // save the geolocation coordinates in two variables
+                    const { latitude, longitude } = position.coords;
+                    setLongitude(longitude)
+                    setLatitude(latitude)
+                },
+                // if there was an error getting the users location
+                (error) => {
+                    console.error('Error getting user location:', error);
+                }
+            );
+        }
+        // if geolocation is not supported by the users browser
+        else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    };
     const user = useUserState();
     const selectedFiles = useRef<File[]>([])
     const [area, setArea] = useState('')
@@ -28,7 +52,7 @@ export default function UploadPage() {
     const [address, setAddress] = useState("")
     const [stoves, setStoves] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [bedrooms, setBedrooms] = useState('')
+    const [bedrooms, setBedrooms] = useState('1')
     const [ceiling, setCeiling] = useState(false)
     const [bathrooms, setBathrooms] = useState('')
     const [firstName, setFirstName] = useState("")
@@ -44,6 +68,7 @@ export default function UploadPage() {
     const [propertyState, setPropertyState] = useState('')
     const [fileList, setFileList] = useState<ReactNode>(null)
     const uploadFiles = async () => {
+
         if (loading) return
         const formData = new FormData()
         formData.append("area", area)
@@ -64,7 +89,7 @@ export default function UploadPage() {
         formData.append("ceiling", ceiling ? '0' : '1')
         formData.append("propertyTitle", propertyTitle)
         formData.append("propertyState", propertyState)
-        formData.append("address", address ? '0' : '1')
+        formData.append("address", address)
         formData.append("security", security ? '0' : '1')
         formData.append("durawall", durawall ? '0' : '1')
         formData.append("swimming", swimming ? '0' : '1')
@@ -112,6 +137,7 @@ export default function UploadPage() {
             setFirstName(user.firstName);
             setPhone(user.phone)
             setEmail(user.email)
+            getUserLocation()
         } else {
             Router.push("/login")
         }
@@ -239,6 +265,17 @@ export default function UploadPage() {
                                             <h5>Zip-Code</h5>
                                             <input type="text" placeholder="000000" />
                                         </div>
+
+                                        <div className="col-md-6">
+                                            <h5>Longitude</h5>
+                                            <input type="text" placeholder="Longitude" value={longitude}
+                                                onChange={(e) => setLongitude(parseInt(e.target.value))} />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <h5>Latitude</h5>
+                                            <input type="text" placeholder="Latitude" value={latitude}
+                                                onChange={(e) => setLatitude(parseInt(e.target.value))} />
+                                        </div>
                                     </div>
                                 </div>
                                 {/* <!-- Section / End --> */}
@@ -258,7 +295,7 @@ export default function UploadPage() {
                                                 <option value="1">1</option> {/* Default/placeholder option */}
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
-                                                <option value="3+">3+</option>
+                                                <option value="4">3+</option>
                                             </select>
                                         </div>
                                         <div className="col-md-6">
@@ -268,7 +305,7 @@ export default function UploadPage() {
                                                 <option value="1">1</option> {/* Default/placeholder option */}
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
-                                                <option value="3+">3+</option>
+                                                <option value="4">3+</option>
                                             </select>
                                         </div>
                                         <div className="col-md-12">

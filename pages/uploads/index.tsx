@@ -101,7 +101,7 @@ export default function UploadsPage() {
                                             return <div key={i}
                                                 className='cursor-pointer flex shadow-lg p-6 justify-between items-center'
                                                 onClick={() => {
-                                                    Router.push("/catalogs/" + e._id)
+                                                    Router.push("/catalogs?q=" + e._id)
                                                 }}>
                                                 <div className="utf-title-container flex gap-x-6">
                                                     <img src="images/listing-02.jpg" alt=""

@@ -1,6 +1,11 @@
-import React from 'react'
+import { ListingInfo } from '@/connections/interfaces'
+import Router from 'next/router'
+import React, { useState } from 'react'
 
-export default function BannerView() {
+export default function BannerView({ listings }: { listings: ListingInfo }) {
+    const [city, setCity] = useState("")
+    const [type, setType] = useState("")
+    const [keywords, setKeyWords] = useState("")
     return (
         <>
             <div className="parallax"
@@ -19,30 +24,22 @@ export default function BannerView() {
                                     <div className="announce">From as low as $10 per day with limited time offer discounts.</div>
                                     <div className="row with-forms">
                                         <div className="col-md-2">
-                                            <select data-placeholder="Select City" title="Select City" className="utf-chosen-select-single-item">
-                                                <option>Select City</option>
-                                                <option>Afghanistan</option>
-                                                <option>Albania</option>
-                                                <option>Algeria</option>
-                                                <option>Brazil</option>
-                                                <option>Burundi</option>
-                                                <option>Bulgaria</option>
-                                                <option>California</option>
-                                                <option>Germany</option>
-                                                <option>Grenada</option>
-                                                <option>Guatemala</option>
-                                                <option>Iceland</option>
+                                            <select data-placeholder="Select City"
+                                                value={city} onChange={(e) => setCity(e.target.value)} title="Select City" className="utf-chosen-select-single-item">
+                                                <option value={""}>Any City</option>
+                                                {listings.cities.map((e, i) => {
+                                                    return <option value={e} key={i}>{e}</option>
+                                                })}
                                             </select>
                                         </div>
 
                                         <div className="col-md-2">
-                                            <select data-placeholder="Property Type" className="utf-chosen-select-single-item">
-                                                <option>Property Type</option>
-                                                <option>Residential</option>
-                                                <option>Apartments</option>
-                                                <option>Houses</option>
-                                                <option>Commercial</option>
-                                                <option>Land</option>
+                                            <select data-placeholder="Property Type" className="utf-chosen-select-single-item"
+                                                value={type} onChange={(e) => setType(e.target.value)}>
+                                                <option value={""}>Any Type</option>
+                                                {listings.type.map((e, i) => {
+                                                    return <option value={e} key={i}>{e}</option>
+                                                })}
                                             </select>
                                         </div>
 
@@ -56,8 +53,17 @@ export default function BannerView() {
 
                                         <div className="col-md-6">
                                             <div className="utf-main-search-input-item">
-                                                <input type="text" placeholder="Enter Keywords..." value="" />
-                                                <button className="button"><i className="fa fa-search"></i> Search</button>
+                                                <input type="text" placeholder="Enter Keywords..." value={keywords}
+                                                    onChange={(e) => setKeyWords(e.target.value)} />
+                                                <button className="button"
+                                                    onClick={() => {
+                                                        Router.push(
+                                                            {
+                                                                pathname: '/listings',
+                                                                search: `?search=true&keywords=${keywords}&city=${city}&propertyType=${type}`, // Or use params.toString() if you built a URLSearchParams
+                                                            }
+                                                        )
+                                                    }}><i className="fa fa-search"></i> Search</button>
                                             </div>
                                         </div>
                                     </div>

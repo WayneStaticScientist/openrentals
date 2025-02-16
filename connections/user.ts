@@ -96,7 +96,7 @@ export class UserRegistration {
     }
     async requestNewTokens(): Promise<string | object> {
         try {
-            const api = await fetch(this.address + "/v1/user/newToken", {
+            const api = await fetch(this.address + "v1/user/newToken", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
