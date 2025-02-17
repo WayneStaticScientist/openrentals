@@ -45,7 +45,7 @@ export default function LoginForm() {
                                         <input type="checkbox" id="two-step" />
                                         <label htmlFor="two-step"><span className="checkbox-icon"></span> Remember Me</label>
                                     </div>
-                                    <a className="lost_password" href="forgot_password.html">Forgot Password?</a>
+                                    <a className="lost_password" href="/forgotpassword">Forgot Password?</a>
                                 </div>
                                 <button className="button full-width border margin-top-10" onClick={loginUser}>
                                     {loading ? <><CgSpinner className='w-full text-center' /></> : <>login</>}

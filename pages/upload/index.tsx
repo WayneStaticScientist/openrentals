@@ -54,7 +54,7 @@ export default function UploadPage() {
     const [loading, setLoading] = useState(false)
     const [bedrooms, setBedrooms] = useState('1')
     const [ceiling, setCeiling] = useState(false)
-    const [bathrooms, setBathrooms] = useState('')
+    const [bathrooms, setBathrooms] = useState('1')
     const [firstName, setFirstName] = useState("")
     const [security, setSecurity] = useState(false)
     const [durawall, setDurawall] = useState(false)
@@ -78,29 +78,31 @@ export default function UploadPage() {
         formData.append("phone", phone)
         formData.append("price", price)
         formData.append("rooms", rooms)
+        formData.append("address", address)
         formData.append("bedrooms", bedrooms)
         formData.append("bathrooms", bathrooms)
         formData.append("firstName", firstName)
-        formData.append("wifi", wifi ? '0' : '1')
+        formData.append("wifi", !wifi ? '0' : '1')
+        formData.append("solar", !solar ? '0' : '1')
         formData.append("description", description)
-        formData.append("tiles", tiles ? '0' : '1')
+        formData.append("tiles", !tiles ? '0' : '1')
         formData.append("propertyType", propertyType)
-        formData.append("stoves", stoves ? '0' : '1')
-        formData.append("ceiling", ceiling ? '0' : '1')
+        formData.append("stoves", !stoves ? '0' : '1')
         formData.append("propertyTitle", propertyTitle)
         formData.append("propertyState", propertyState)
-        formData.append("address", address)
-        formData.append("security", security ? '0' : '1')
-        formData.append("durawall", durawall ? '0' : '1')
-        formData.append("swimming", swimming ? '0' : '1')
-        formData.append("studyRoom", studyRoom ? '0' : '1')
-        formData.append("electricity", electricity ? '0' : '1')
+        formData.append("ceiling", !ceiling ? '0' : '1')
+        formData.append("security", !security ? '0' : '1')
+        formData.append("durawall", !durawall ? '0' : '1')
+        formData.append("swimming", !swimming ? '0' : '1')
+        formData.append("studyRoom", !studyRoom ? '0' : '1')
+        formData.append("electricity", !electricity ? '0' : '1')
+        console.log(formData)
         for (const f of selectedFiles.current) {
             formData.append("files", f)
         }
         setLoading(true)
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER}v1/upload`, { // Replace with your upload endpoint
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER}v1/property/upload`, { // Replace with your upload endpoint
                 headers: {
                     "Authorization": "Bearer " + getVariables().refreshTokens,
                     "X-device-id": getDeviceId(),

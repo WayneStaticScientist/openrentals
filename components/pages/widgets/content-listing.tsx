@@ -1,4 +1,5 @@
 import { Property } from '@/connections/interfaces'
+import { getLastDay } from '@/functions/time-format'
 import Router from 'next/router'
 import { BiPlus } from 'react-icons/bi'
 import { RiSearchFill } from 'react-icons/ri'
@@ -44,7 +45,7 @@ export default function ContentListing({ loading, list, fromSearch, searchTitle 
                             </div>
 
                             {/* <!-- Listings --> */}
-                            <div className="utf-listings-container-area list-layout">
+                            <div className="utf-listings-container-area list-layout flex-col flex gap-y-12">
                                 <div className='my-10 text-5xl'>
                                     {fromSearch &&
                                         <div>Your search results {searchTitle.length > 0 &&
@@ -54,28 +55,40 @@ export default function ContentListing({ loading, list, fromSearch, searchTitle 
                                 </div>
                                 {list.length > 0 ? <>{
                                     list.map((e, i) => {
-                                        return <div key={i} className="utf-listing-item cursor-pointer" onClick={() => {
+                                        return <div style={{
+                                            height: "300px",
+
+                                        }} key={i} className="flex cursor-pointer  shadow-md" onClick={() => {
                                             Router.push("/catalogs?q=" + e._id)
                                         }}>
-                                            <span className="utf-smt-listing-img-container">
-                                                <div className="utf-listing-badges-item">
-                                                    <span className="featured">Featured</span>
-                                                    <span className="for-sale">{e.state}</span></div>
+                                            <span className=" relative">
+                                                <div className="absolute w-full flex justify-end">
+                                                    <span className="for-sale bg-green-500 text-white p-1 m-3 text-lg rounded-3xl">for {e.propertyState}</span></div>
                                                 <div className="utf-listing-img-content-item">
-                                                    <img className="utf-user-picture" src="images/user_1.jpg" alt="user_1" />
                                                     <span className="like-icon with-tip" data-tip-content="Bookmark"></span>
                                                     <span className="compare-button with-tip" data-tip-content="Add to Compare"></span>
                                                     <span className="video-button with-tip" data-tip-content="Video"></span>
                                                 </div>
-                                                <div className="utf-listing-carousel-item">
-                                                    <div><img src="images/listing-01.jpg" alt="" /></div>
-                                                    <div><img src="images/listing-01.jpg" alt="" /></div>
-                                                    <div><img src="images/listing-01.jpg" alt="" /></div>
+                                                <div className="utf-listing-carousel-item h-full">
+                                                    <div className=''>
+                                                        <div className=''
+                                                            style={{
+                                                                backgroundSize: "cover",
+                                                                backgroundRepeat: "no-repeat",
+                                                                backgroundPosition: "center",
+                                                                width: "300px",
+                                                                height: "300px",
+                                                                backgroundImage: e.images.length > 0 ? `url(${process.env.NEXT_PUBLIC_SERVERT}${e.images[0]})` : "url(images/listing-02.jpg)"
+                                                            }}
+                                                        />
+
+                                                    </div>
+
                                                 </div>
                                             </span>
-                                            <div className="utf-listing-content">
-                                                <div className="utf-listing-title">
-                                                    <span className="utf-listing-price">{e.price}</span>
+                                            <div className="flex flex-col">
+                                                <div className="p-6">
+                                                    <span className="utf-listing-price bg-green-500 rounded-lg p-3 text-white">${e.price}</span>
                                                     <h4><a href="single-property-page-1.html">{e.propertyTitle}</a></h4>
                                                     <span className="utf-listing-address"><i className="icon-material-outline-location-on"></i> {e.address} {e.city}</span>
                                                 </div>
@@ -86,7 +99,7 @@ export default function ContentListing({ loading, list, fromSearch, searchTitle 
                                                     <li><i className="icon-line-awesome-arrows"></i> Sq m<span>{e.area}</span></li>
                                                 </ul>
                                                 <div className="utf-listing-user-info"><a href="agents-profile.html"><i className="icon-line-awesome-user">
-                                                </i>{e.firstName}</a> <span>1 Days Ago</span>
+                                                </i>{e.firstName}</a> <span>{getLastDay(e.date)} Ago</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -282,7 +295,7 @@ export default function ContentListing({ loading, list, fromSearch, searchTitle 
                             </div>
                         </div>
                         {/* <!-- Sidebar / End --> */}
-                    </div>
+                    </div >
             }
         </div >
     )

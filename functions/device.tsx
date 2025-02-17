@@ -1,5 +1,5 @@
 import { Tokens, User } from "@/connections/interfaces";
-import { useUserState } from "@/connections/user";
+import { UserRegistration, useUserState } from "@/connections/user";
 export function getDeviceId(): string {
     let id = localStorage.getItem("xptk12ro")
     if (id) return id
@@ -29,8 +29,17 @@ export function setUser(user: object) {
     localStorage.setItem(`${process.env.NEXT_PUBLIC_GUEST}`, JSON.stringify(user))
     return user
 }
-export function userLoggedIn(): boolean {
+export function userLoggedIn(register: boolean = false): boolean {
     try {
+        if (register) {
+            const user = new UserRegistration()
+            const resp = user.fetchUser()
+            if (typeof resp === 'string') {
+                clearSavedLogss()
+                return false
+            }
+            return true
+        }
         const data = localStorage.getItem(`${process.env.NEXT_PUBLIC_GUEST}`)
         if (!data) return false
         const user: User = JSON.parse(data)

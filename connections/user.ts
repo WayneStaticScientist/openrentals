@@ -123,5 +123,7 @@ export const useUserState = create<User>(() => ({
     phone: "",
     message: "",
     idNumber: "",
-    userTitle: ""
+    userTitle: "",
+    verified: false,
+    profile: ""
 }))

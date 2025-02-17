@@ -4,8 +4,11 @@ import { showSuccess } from '@/functions/toast';
 import OpenChainsDialog from './open-chains-dialog';
 import { clearSavedLogss } from '@/functions/device';
 import Router from 'next/router';
+import { useUserState } from '@/connections/user';
 export default function ProfileReview({ page }: { page: string }) {
+    const user = useUserState()
     const [dialog, setDialog] = useState(false)
+    const [imageError, setImageError] = useState(false)
     return (
         <>
             <OpenChainsDialog className={''}
@@ -22,14 +25,15 @@ export default function ProfileReview({ page }: { page: string }) {
                 content={<>Are you sure to logout ? You can just Log back In</>} shown={dialog} />
             <div className="col-md-3">
                 <div className="margin-bottom-20">
-                    <div className="utf-edit-profile-photo-area">
-                        <img src="images/agent-02.jpg" alt="" />
-                        <div className="utf-change-photo-btn-item ">
-                            <div className="utf-user-photo-upload"> <span><i className="fa fa-upload"></i>
-                                Upload Photo</span>
-                                <input type="file" className="upload tooltip top" title="Upload Photo" />
-                            </div>
-                        </div>
+                    <div className="utf-edit-profile-photo-area cursor-pointer" onClick={() => {
+                        Router.push("/changeprofile")
+                    }}>
+                        <img src={
+                            imageError ? "images/default/nouser.jpg" :
+                                user.profile.length > 3 ? `${process.env.NEXT_PUBLIC_SERVERT}${user.profile}` : "images/default/nouser.jpg"} alt="" onError={() => {
+                                    setImageError(true)
+                                }} />
+
                     </div>
                 </div>
                 <div className="clearfix"></div>

@@ -22,11 +22,17 @@ export default function FeaturedComponents({ properties }: { properties: Propert
                                     return <div className="utf-carousel-item-area" key={i}>
                                         <div className="utf-listing-item compact">
                                             <Link href={`/catalogs?q=${e._id}`} className="utf-smt-listing-img-container">
-                                                <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For Sale</span> </div>
+                                                <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For {e.propertyState}</span> </div>
                                                 <div className="utf-listing-img-content-item">
                                                     <span className="utf-listing-compact-title-item">{e.propertyTitle} <i>${formatAmount(e.price, 3)}</i></span>
                                                 </div>
-                                                <img src="images/listing-01.jpg" alt="" />
+                                                <img
+                                                    className='w-96 h-96'
+                                                    style={{
+                                                        height: "250px"
+                                                    }}
+                                                    src={e.images.length > 0 ? `${process.env.NEXT_PUBLIC_SERVERT}${e.images[0]}` : "images/listing-02.jpg"}
+                                                    alt="" />
                                                 <ul className="listing-hidden-content">
                                                     <li><i className="fa fa-bed"></i> Beds <span>{e.bedrooms}</span></li>
                                                     <li><i className="icon-feather-codepen"></i> Baths <span>{e.bathrooms}</span></li>

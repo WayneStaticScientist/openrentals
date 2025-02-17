@@ -9,15 +9,16 @@ const BannerPage = dynamic(() => import('@/components/pages/banner-page'), { ssr
 
 export default function MyProfile() {
     const user = useUserState();
-    const [loggedIn, setLoggedIn] = useState(false)
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [userTitle, setUserTitle] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [message, setMessage] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [firstName, setFirstName] = useState("")
+    const [userTitle, setUserTitle] = useState("")
+    const [loggedIn, setLoggedIn] = useState(false)
     useEffect(() => {
-        if (userLoggedIn()) {
+
+        if (userLoggedIn(true)) {
             setLoggedIn(true)
             setFirstName(user.firstName);
             setLastName(user.lastName)

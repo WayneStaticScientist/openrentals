@@ -1,4 +1,5 @@
 import FooterView from '@/components/home/footer';
+import NoResults from '@/components/pages/widgets/no-results';
 import ProfileReview from '@/components/pages/widgets/profile-review';
 import { PropertyList } from '@/connections/interfaces';
 import { useUserState } from '@/connections/user';
@@ -65,7 +66,7 @@ export default function UploadsPage() {
     return (
         <div id="wrapper">
             <ToastContainer />
-            <HeaderView page='myprofile' sub={'user'} />
+            <HeaderView page='user' sub={'myprofile'} />
             <BannerPage title={'My Uploads'} path={[
                 {
                     root: "/",
@@ -97,36 +98,50 @@ export default function UploadsPage() {
                                         }}>Action</th>
                                     </div>
                                     {
-                                        property && property.properties.map((e, i) => {
-                                            return <div key={i}
-                                                className='cursor-pointer flex shadow-lg p-6 justify-between items-center'
-                                                onClick={() => {
-                                                    Router.push("/catalogs?q=" + e._id)
-                                                }}>
-                                                <div className="utf-title-container flex gap-x-6">
-                                                    <img src="images/listing-02.jpg" alt=""
-                                                        className='w-44 h-44' />
-                                                    <div className="title flex flex-col">
-                                                        <h3>{e.propertyTitle}</h3>
-                                                        <span className='text-sm'>{e.address} {e.city}</span>
-                                                        <span className="text-green-500 text-center rounded-xl flex  items-center">
-                                                            <FaDollarSign />{formatAmount(e.price)}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="">12 Jan, 2021</div>
-                                                <div className="action flex gap-x-6">
-                                                    {property.owned ?
-                                                        <>
-                                                            <a href="#" className="view tooltip left" title="View"><i className="icon-feather-eye"></i></a>
-                                                            <a href="#" className="edit tooltip left" title="Edit"><i className="icon-feather-edit"></i></a>
-                                                            <a href="#" className="delete tooltip left" title="Delete"><i className="icon-feather-divash-2"></i></a>
+                                        property && <>
+                                            {
+                                                property.properties.length > 0 ? <>
+                                                    {property.properties.map((e, i) => {
+                                                        return <div key={i}
+                                                            className='cursor-pointer flex shadow-lg p-6 justify-between items-center'
+                                                            onClick={() => {
+                                                                Router.push("/catalogs?q=" + e._id)
+                                                            }}>
+                                                            <div className="utf-title-container flex gap-x-6">
+                                                                <img src={
+                                                                    e.images.length > 0 ? `${process.env.NEXT_PUBLIC_SERVERT}${e.images[0]}` : "images/listing-02.jpg"
+                                                                } alt=""
+                                                                    className='w-44 h-44' />
+                                                                <div className="title flex flex-col">
+                                                                    <h3>{e.propertyTitle}</h3>
+                                                                    <span className='text-sm'>{e.address} {e.city}</span>
+                                                                    <span className="text-green-500 text-center rounded-xl flex  items-center">
+                                                                        <FaDollarSign />{formatAmount(e.price)}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div className="">12 Jan, 2021</div>
+                                                            <div className="action flex gap-x-6">
+                                                                {property.owned ?
+                                                                    <>
+                                                                        <a href="#" className="view tooltip left" title="View"><i className="icon-feather-eye"></i></a>
+                                                                        <a href="#" className="edit tooltip left" title="Edit"><i className="icon-feather-edit"></i></a>
+                                                                        <a href="#" className="delete tooltip left" title="Delete"><i className="icon-feather-divash-2"></i></a>
 
-                                                        </>
-                                                        : <></>}
-                                                </div>
-                                            </div>
-                                        })
+                                                                    </>
+                                                                    : <></>}
+                                                            </div>
+                                                        </div>
+                                                    })}
+                                                </>
+                                                    :
+                                                    <>
+                                                        <div className='w-full p-3 h-full items-center flex flex-col'>
+                                                            <NoResults message='you have not uploads yet' />
+                                                        </div>
+                                                    </>
+                                            }
+                                        </>
                                     }
                                 </div>}
                         </div>
@@ -135,6 +150,6 @@ export default function UploadsPage() {
                 </div>
             </div>
             <FooterView />
-        </div>
+        </div >
     )
 }

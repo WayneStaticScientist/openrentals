@@ -1,10 +1,10 @@
 import FooterView from '@/components/home/footer';
-import { getProductById, hideItem } from '@/connections/get-property';
+import { deleteItem, getProductById, hideItem } from '@/connections/get-property';
 import { PropertyPackage } from '@/connections/interfaces';
 import { showError, showSuccess } from '@/functions/toast';
 import dynamic from 'next/dynamic';
 import Router from 'next/router';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CgSmile, CgSpinner } from 'react-icons/cg';
 import { ProgressBar } from 'react-loader-spinner';
 import { ToastContainer } from 'react-toastify';
@@ -19,11 +19,14 @@ import { useSearchParams } from 'next/navigation';
 const HeaderView = dynamic(() => import('@/components/home/header'), { ssr: false });
 export default function CatalogItem() {
     const searchParams = useSearchParams();
-    const [packet, setPropertyPacket] = useState<PropertyPackage | null>(null)
+    const imgRef = useRef<ImageGallery>(null)
+    const [message, setMessage] = useState("")
     const [loading, setLoading] = useState(true)
+    const [showMore, setShowMore] = useState(false)
     const [hideDialog, setHideDialog] = useState(false)
     const [loadingHide, setLoadingHide] = useState(false)
-    const [message, setMessage] = useState("")
+    const [deleteDialog, setDeleteDialog] = useState(false)
+    const [packet, setPropertyPacket] = useState<PropertyPackage | null>(null)
     const hideItemCall = async () => {
         setLoadingHide(true)
         const result = await hideItem(packet?.property._id ?? '', !packet?.property.hidden)
@@ -33,6 +36,16 @@ export default function CatalogItem() {
         }
         Router.reload()
         return showSuccess("The item is successfully made " + packet?.property.hidden ? 'public' : 'private')
+    }
+    const deleteItemCall = async () => {
+        setLoadingHide(true)
+        const result = await deleteItem(packet?.property._id ?? '')
+        setLoadingHide(false)
+        if (typeof result === 'string') {
+            return showError(result)
+        }
+        Router.replace("/uploads")
+        return showSuccess("The item is successfully deleted successfully ")
     }
     const fetch_item = async (id: string) => {
         setLoading(true)
@@ -59,6 +72,16 @@ export default function CatalogItem() {
                 }}
                 title={packet?.property.hidden ? 'Show Item?' : 'Hide item?'}
                 content={<>Are you sure to {packet?.property.hidden ? 'show' : 'hide'} Property</>} shown={hideDialog} />
+            <OpenChainsDialog className={''}
+                onCloseDialog={() => {
+                    setDeleteDialog(false)
+                }}
+                onAcceptDialog={() => {
+                    setDeleteDialog(false)
+                    deleteItemCall()
+                }}
+                title={'Delete ' + packet?.property.propertyTitle}
+                content={<>Are you sure to delete this Property .This is permanent and irreversible</>} shown={deleteDialog} />
             {
                 loading ? <div className='w-screen h-screen flex justify-center items-center'>
                     <ProgressBar />
@@ -90,26 +113,32 @@ export default function CatalogItem() {
                                     }
                                 ]} />
                                 <div className="container">
-                                    <div className="row margin-bottom-50">
-                                        <ImageGallery items={[
-                                            {
-                                                original: "../images/single-property-01.jpg",
-                                                thumbnail: "../images/single-property-01.jpg",
-                                            },
-                                            {
-                                                original: "../images/single-property-02.jpg",
-                                                thumbnail: "../images/single-property-02.jpg",
-                                            },
-                                            {
-                                                original: "../images/single-property-03.jpg",
-                                                thumbnail: "../images/single-property-03.jpg",
-                                            },
-                                            {
-                                                original: "../images/single-property-05.jpg",
-                                                thumbnail: "../images/single-property-05.jpg",
-                                            },
-                                        ]} />;
+                                    <div className="row margin-bottom-50 " style={{
+                                        backgroundSize: "cover",
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundImage: packet.property.images.length > 0 ?
+                                            `url("${process.env.NEXT_PUBLIC_SERVERT}${packet.property.images[1]}")` : ''
+                                    }}>
+                                        <div className='bg-[#00000099] backdrop-blur-xl'>
+                                            <ImageGallery
 
+                                                ref={imgRef}
+                                                renderItem={(e) => {
+                                                    return <div className='flex justify-center' style={{
+                                                        height: "400px"
+                                                    }}>
+                                                        <img src={e.original} alt='img' />
+                                                    </div>
+                                                }}
+                                                items={
+                                                    packet.property.images.map((e) => {
+                                                        return {
+                                                            original: `${process.env.NEXT_PUBLIC_SERVERT}${e}`,
+                                                            thumbnail: `${process.env.NEXT_PUBLIC_SERVERT}${e}`,
+                                                        }
+                                                    })
+                                                } />;
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="container">
@@ -136,7 +165,8 @@ export default function CatalogItem() {
                                                 </div>
                                                 {packet.owned &&
                                                     <div className='flex gap-x-8 items-center flex-wrap p-3 mt-8'>
-                                                        <button className='gap-2 flex items-center p-3 rounded-xl bg-red-600 text-white'>
+                                                        <button className='gap-2 flex items-center p-3 rounded-xl bg-red-600 text-white'
+                                                            onClick={() => setDeleteDialog(true)}>
                                                             <MdDelete /> delete</button>
                                                         {
                                                             packet.property.hidden ?
@@ -165,9 +195,11 @@ export default function CatalogItem() {
                                                 <div className="utf-desc-headline-item">
                                                     <h3><i className="icon-material-outline-description"></i> Property Description</h3>
                                                 </div>
-                                                <div className="show-more">
+                                                <div className={showMore ? '' : "show-more"}>
                                                     {packet.property.description}
-                                                    <a href="#" className="show-more-button">Show More <i className="sl sl-icon-plus"></i></a>
+                                                    <button onClick={() => {
+                                                        setShowMore(!showMore)
+                                                    }} className="show-more-button">Show More <i className="sl sl-icon-plus"></i></button>
                                                 </div>
 
                                                 {/* <!-- Details --> */}
@@ -285,7 +317,7 @@ export default function CatalogItem() {
                                                                         <>
                                                                             <button className='p-3 bg-primary text-white rounded-full'
                                                                                 onClick={() => {
-                                                                                    Router.push("/listings")
+                                                                                    Router.push("/listings?uploader=" + packet.property.uploader)
                                                                                 }}>View Agent Listings</button>
                                                                         </>
                                                                     }

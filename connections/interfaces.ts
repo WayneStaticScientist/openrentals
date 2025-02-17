@@ -13,6 +13,8 @@ export interface User {
     phone: string
     idNumber: string
     userTitle: string
+    profile: string
+    verified: boolean
 }
 export interface Property {
     address: string
@@ -27,9 +29,10 @@ export interface Property {
     durawall: string
     electricity: string
     email: string
+    date: number
     firstName: string
     images: string[]
-    owne: User
+    owner: User
     phone: string
     price: number
     propertyState: string
