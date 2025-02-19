@@ -56,6 +56,7 @@ export interface PropertyList {
 }
 export interface PropertyPackage {
     owned: boolean
+    registered: boolean
     property: Property
 }
 export interface GeolocationInterface {
@@ -77,4 +78,14 @@ export interface ListingInfo {
 export interface PropertyWrapper {
     properties: Property[]
     listingInfo: ListingInfo
+}
+export interface Comment {
+    date: number
+    user: User
+    email: string
+    type: string
+    postId: string
+    comment: string
+    _id: string
+    subComments: Comment[]
 }

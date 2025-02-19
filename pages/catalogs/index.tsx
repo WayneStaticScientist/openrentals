@@ -1,6 +1,6 @@
 import FooterView from '@/components/home/footer';
-import { deleteItem, getProductById, hideItem } from '@/connections/get-property';
-import { PropertyPackage } from '@/connections/interfaces';
+import { deleteItem, getComments, getProductById, hideItem, postPropertyComment } from '@/connections/get-property';
+import { Comment, PropertyPackage } from '@/connections/interfaces';
 import { showError, showSuccess } from '@/functions/toast';
 import dynamic from 'next/dynamic';
 import Router from 'next/router';
@@ -16,17 +16,39 @@ import { MdDelete, MdEmail, MdOutlineHideSource } from 'react-icons/md';
 import OpenChainsDialog from '@/components/pages/widgets/open-chains-dialog';
 import BannerPage from '@/components/pages/banner-page';
 import { useSearchParams } from 'next/navigation';
+import CommentList from '@/components/pages/widgets/comments-list';
 const HeaderView = dynamic(() => import('@/components/home/header'), { ssr: false });
 export default function CatalogItem() {
     const searchParams = useSearchParams();
     const imgRef = useRef<ImageGallery>(null)
     const [message, setMessage] = useState("")
+    const [comment, setComment] = useState("")
     const [loading, setLoading] = useState(true)
     const [showMore, setShowMore] = useState(false)
     const [hideDialog, setHideDialog] = useState(false)
+    const [commenting, setCommenting] = useState(false)
     const [loadingHide, setLoadingHide] = useState(false)
+    const [comments, setComments] = useState<Comment[]>([])
     const [deleteDialog, setDeleteDialog] = useState(false)
+    const [commentsLoading, setCommentsLoading] = useState(true)
     const [packet, setPropertyPacket] = useState<PropertyPackage | null>(null)
+    const fetchAllComments = async () => {
+        setCommentsLoading(true)
+        const response = await getComments(searchParams.get("q") ?? '')
+        setCommentsLoading(false)
+        if (typeof response === 'string') return
+        console.log("The response is ", response)
+        return setComments(response)
+    }
+    const postComment = async () => {
+        if (commenting) return
+        setCommenting(true)
+        const response = await postPropertyComment(comment, packet?.property._id ?? "")
+        setCommenting(false)
+        if (typeof response === 'string') return showError(response)
+        setComment("")
+        return showSuccess("posted")
+    }
     const hideItemCall = async () => {
         setLoadingHide(true)
         const result = await hideItem(packet?.property._id ?? '', !packet?.property.hidden)
@@ -57,6 +79,7 @@ export default function CatalogItem() {
             return showError(data)
         }
         setPropertyPacket(data)
+        fetchAllComments()
     }
     useEffect(() => {
         fetch_item(searchParams.get("q") ?? '')
@@ -328,8 +351,12 @@ export default function CatalogItem() {
                                                             <div className="clearfix"></div>
                                                         </div>
                                                         {packet.owned ? <></> : <>
-                                                            <textarea></textarea>
-                                                            <button className="button fullwidth margin-top-5">Send Message</button>
+                                                            <textarea value={comment} onChange={(e) => setComment(e.target.value)}>
+                                                            </textarea>
+                                                            <button className="button fullwidth margin-top-5" onClick={() => {
+                                                                if (!packet.registered) return showError("please login to comment")
+                                                                postComment()
+                                                            }}>Post Comment</button>
                                                         </>}
                                                     </div>
                                                 </div>
@@ -469,8 +496,11 @@ export default function CatalogItem() {
                                         </div>
                                         {/* <!-- Sidebar / End --> */}
                                     </div>
+                                    {commentsLoading ? <div></div>
+                                        : <CommentList comments={comments} />}
                                 </div>
                                 <FooterView />
+
                             </div > :
                             <div className='flex w-screen h-screen justify-center items-center flex-col'>
                                 <span><CgSmile size={25} color='orange' /></span>

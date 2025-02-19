@@ -29,6 +29,21 @@ export function setUser(user: object) {
     localStorage.setItem(`${process.env.NEXT_PUBLIC_GUEST}`, JSON.stringify(user))
     return user
 }
+export function getUser(): User | null {
+    try {
+        const data = localStorage.getItem(`${process.env.NEXT_PUBLIC_GUEST}`)
+        if (!data) return null
+        const user: User = JSON.parse(data)
+        if (!user) return null
+        if (user.email.length > 0 && user.firstName.length > 2 && user.lastName.length > 2) {
+            return user
+        }
+        return null
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return null
+    }
+}
 export function userLoggedIn(register: boolean = false): boolean {
     try {
         if (register) {
