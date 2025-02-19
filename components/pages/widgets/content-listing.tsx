@@ -63,7 +63,8 @@ export default function ContentListing({ loading, list, fromSearch, searchTitle 
                                         }}>
                                             <span className=" relative">
                                                 <div className="absolute w-full flex justify-end">
-                                                    <span className="for-sale bg-green-500 text-white p-1 m-3 text-lg rounded-3xl">for {e.propertyState}</span></div>
+                                                    <span className="for-sale bg-green-500 text-white p-1 m-3 text-lg rounded-3xl">
+                                                        for {e.propertyState}</span></div>
                                                 <div className="utf-listing-img-content-item">
                                                     <span className="like-icon with-tip" data-tip-content="Bookmark"></span>
                                                     <span className="compare-button with-tip" data-tip-content="Add to Compare"></span>
@@ -81,7 +82,6 @@ export default function ContentListing({ loading, list, fromSearch, searchTitle 
                                                                 backgroundImage: e.images.length > 0 ? `url(${process.env.NEXT_PUBLIC_SERVERT}${e.images[0]})` : "url(images/listing-02.jpg)"
                                                             }}
                                                         />
-
                                                     </div>
 
                                                 </div>
@@ -89,7 +89,7 @@ export default function ContentListing({ loading, list, fromSearch, searchTitle 
                                             <div className="flex flex-col">
                                                 <div className="p-6">
                                                     <span className="utf-listing-price bg-green-500 rounded-lg p-3 text-white">${e.price}</span>
-                                                    <h4><a href="single-property-page-1.html">{e.propertyTitle}</a></h4>
+                                                    <h4><a href={`/catalogs?q=${e._id}`}>{e.propertyTitle}</a></h4>
                                                     <span className="utf-listing-address"><i className="icon-material-outline-location-on"></i> {e.address} {e.city}</span>
                                                 </div>
                                                 <ul className="utf-listing-features">

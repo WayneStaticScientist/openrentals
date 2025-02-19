@@ -48,6 +48,7 @@ export default function CatalogItem() {
         return showSuccess("The item is successfully deleted successfully ")
     }
     const fetch_item = async (id: string) => {
+        if (id.length === 0) return
         setLoading(true)
         const data = await getProductById(id)
         setLoading(false)
@@ -254,13 +255,8 @@ export default function CatalogItem() {
                                                     <div id="propertyMap" data-latitude="48.8566" data-longitude="2.3522" data-map-icon="im im-icon-Hamburger"></div>
                                                     <a href="#" id="streetView">Street View</a>
                                                 </div>
-
-
                                                 <div className="clearfix"></div>
                                                 <div className="margin-top-35"></div>
-
-
-
                                             </div>
                                         </div>
                                         {/* <!-- Property Description / End --> */}
@@ -296,7 +292,13 @@ export default function CatalogItem() {
                                                             <h3 className='flex items-center gap-x-3'>Agents Details{packet.owned ? <div className='bg-green-500 text-white p-3 rounded-full text-sm w-fit'>you</div> : <></>}</h3>
                                                         </div>
                                                         <div className="agent-title">
-                                                            <div className="agent-photo"><img src="images/agent-avatar.jpg" alt="" /></div>
+                                                            <div className="agent-photo">
+                                                                <img src={
+                                                                    packet.property.owner.profile.length > 0 ?
+                                                                        `${process.env.NEXT_PUBLIC_SERVERT}${packet.property.owner.profile}` :
+                                                                        "images/default/nouser.jpg"
+                                                                } alt="" />
+                                                            </div>
                                                             <div className="flex flex-col gap-y-4">
                                                                 <h4><a href="#">{packet.property.firstName}</a></h4>
                                                                 <span className='flex gap-x-2 items-center'><a href={`tel:${packet.property.phone}`} className='flex items-center gap-x-2'>

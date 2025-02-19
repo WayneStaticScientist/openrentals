@@ -51,6 +51,7 @@ export interface Property {
 }
 export interface PropertyList {
     owned: boolean
+    registered: boolean
     properties: Property[]
 }
 export interface PropertyPackage {
