@@ -1,9 +1,9 @@
-import ProfileReview from '@/components/pages/widgets/profile-review';
-import { useUserState } from '@/connections/user';
-import { userLoggedIn } from '@/functions/device';
-import dynamic from 'next/dynamic';
 import Router from 'next/router';
+import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react'
+import { UserRegistration, useUserState } from '@/connections/user';
+import ProfileReview from '@/components/pages/widgets/profile-review';
+import { ProgressBar } from 'react-loader-spinner';
 const HeaderView = dynamic(() => import("@/components/home/header"), { ssr: false });
 const BannerPage = dynamic(() => import('@/components/pages/banner-page'), { ssr: false });
 
@@ -16,22 +16,28 @@ export default function MyProfile() {
     const [firstName, setFirstName] = useState("")
     const [userTitle, setUserTitle] = useState("")
     const [loggedIn, setLoggedIn] = useState(false)
-    useEffect(() => {
-
-        if (userLoggedIn(true)) {
-            setLoggedIn(true)
-            setFirstName(user.firstName);
-            setLastName(user.lastName)
-            setUserTitle(user.userTitle)
-            setPhone(user.phone)
-            setMessage(user.message)
-            setEmail(user.email)
-        } else {
+    const login = async () => {
+        const userReg = new UserRegistration()
+        const resp = await userReg.fetchUser({ retry: true })
+        if (typeof resp == 'string') {
             Router.push("/login")
+            return
         }
+        setLoggedIn(true)
+        setEmail(user.email)
+        setPhone(user.phone)
+        setMessage(user.message)
+        setLastName(user.lastName)
+        setUserTitle(user.userTitle)
+        setFirstName(user.firstName);
+    }
+    useEffect(() => {
+        login()
     }, [])
     if (!loggedIn) {
-        return <></>
+        return <div className='flex justify-center items-center w-screen h-screen'>
+            <ProgressBar />
+        </div>
     }
     return (
         <>

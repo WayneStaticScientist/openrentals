@@ -1,7 +1,11 @@
 import { getDeviceId, getVariables, setUser, setVariables } from "@/functions/device";
 import { Tokens, User } from "./interfaces";
 import { create } from "zustand";
-
+import { StaticStates } from "@/functions/static-states";
+export interface UserProtocols {
+    retry?: boolean | undefined,
+    clearNotifications?: boolean
+}
 export class UserRegistration {
     address: string;
     constructor() {
@@ -41,7 +45,7 @@ export class UserRegistration {
             if (api.ok) {
                 const data = await api.json() as Tokens
                 setVariables(data)
-                return await this.fetchUser()
+                return await this.fetchUser({})
             }
             return this.getExtractError(api)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -63,7 +67,7 @@ export class UserRegistration {
             if (api.ok) {
                 const data = await api.json() as Tokens
                 setVariables(data)
-                return this.fetchUser()
+                return this.fetchUser({})
             }
             return this.getExtractError(api)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,9 +75,9 @@ export class UserRegistration {
             return "Failed to connect to server "
         }
     }
-    async fetchUser(retry: boolean = true) {
+    async fetchUser(data: UserProtocols): Promise<string | object> {
         try {
-            const api = await fetch(this.address + "v1/user/fetch", {
+            const api = await fetch(this.address + (data.clearNotifications ? "v1/user/fetch?notifications=" + StaticStates.STATIC_NOTIFICATION_CLEAR : "v1/user/fetch"), {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -85,7 +89,7 @@ export class UserRegistration {
                 return setUser(await api.json())
             }
             if (api.status == 401) {
-                if (retry) return this.requestNewTokens()
+                if (data.retry) return this.requestNewTokens(data)
                 return "you are not authorized to use this platform"
             }
             return this.getExtractError(api)
@@ -94,7 +98,7 @@ export class UserRegistration {
             return "Failed to connect to server "
         }
     }
-    async requestNewTokens(): Promise<string | object> {
+    async requestNewTokens(protocol: UserProtocols): Promise<string | object> {
         try {
             const api = await fetch(this.address + "v1/user/newToken", {
                 method: "GET",
@@ -107,7 +111,9 @@ export class UserRegistration {
             if (api.ok) {
                 const data = await api.json() as Tokens
                 setVariables(data)
-                return await this.fetchUser(false)
+                const intercept = protocol
+                intercept.retry = false
+                return await this.fetchUser(intercept)
             }
             return this.getExtractError(api)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars

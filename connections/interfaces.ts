@@ -25,6 +25,7 @@ export interface User {
     verified: boolean
     notificationSize: number
     notifications: Notification[]
+    notificationClearTime: number
 }
 export interface Property {
     address: string

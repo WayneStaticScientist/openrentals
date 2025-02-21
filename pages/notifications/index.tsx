@@ -18,7 +18,7 @@ export default function NotificationsPage() {
     const fetchData = async () => {
         setFetching(true)
         const user = new UserRegistration()
-        const resp = await user.fetchUser()
+        const resp = await user.fetchUser({ clearNotifications: true, retry: true })
         setFetching(false)
         if (typeof resp === 'string') {
             return Router.push('/login')
@@ -65,7 +65,8 @@ export default function NotificationsPage() {
                                                 user.notifications.length > 0 ? <>
                                                     {user.notifications.map((e, i) => {
                                                         return <div key={i}
-                                                            className='cursor-pointer flex shadow-lg p-6 justify-between  items-center gap-x-3'
+                                                            className={`cursor-pointer flex shadow-lg p-6 justify-between  items-center gap-x-3 
+                                                                ${user.notificationClearTime <= e.date ? 'bg-gray-100 border-l-4 border-green-500 m-3' : ''}`}
                                                             onClick={() => {
                                                                 Router.push("/catalogs?q=" + e._id)
                                                             }}>
@@ -73,6 +74,9 @@ export default function NotificationsPage() {
                                                                 <span className='p-3 rounded-full bg-green-500 text-white'><IoIosNotifications /></span>
                                                                 {e.message}
                                                             </div>
+                                                            {
+                                                                (user.notificationClearTime <= e.date) &&
+                                                                <span className='bg-orange-500 text-white p-1 rounded-full'>new</span>}
                                                             {getLastDay(e.date)} ago
                                                         </div>
                                                     })}

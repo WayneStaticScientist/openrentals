@@ -8,7 +8,7 @@ export default function CommentList({ comments, refreshList }: { comments: Comme
             <div className="utf-inner-blog-section-title">
                 <h4><i className="icon-line-awesome-commenting-o"></i> Comments </h4>
             </div>
-            <ul>
+            <ul className='flex flex-col gap-y-12'>
                 {comments.map((e, i) => {
                     return <CommentContainer key={i} e={e} refreshList={refreshList} />
                 })}
