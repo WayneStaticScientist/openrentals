@@ -45,6 +45,17 @@ export default function ProfileReview({ page }: { page: string }) {
                             <li><Link href="/" className={page == 'bookmarks' ? "current" : ""}><i className="sl sl-icon-star"></i> Bookmark Listing</Link></li>
                             <li><Link href="/uploads" className={page == 'uploads' ? "current" : ""}><i className="sl sl-icon-docs"></i> My Property</Link>
                             </li>
+                            <li className='relative'><Link href="/notifications" className={page == 'notifications' ? "current" : ""}><i className="sl sl-icon-docs"></i>Notifications
+                                <span>
+                                    {user.notificationSize > 0 &&
+                                        <span className='z-50 absolute bg-green-500 text-white flex-shrink-0 flex-grow-0 p-1 text-lg rounded-full ' style={{
+                                            left: 0,
+                                            top: 0
+                                        }}>{user.notificationSize}</span>
+                                    }
+                                </span>
+                            </Link>
+                            </li>
                             <li><Link href="/upload" className={page == 'upload' ? "current" : ""}><i className="sl sl-icon-action-redo"></i> New Property</Link></li>
                             <li><a href="change-password.html"><i className="sl sl-icon-lock"></i> Change Password</a></li>
                             <li><button onClick={() => setDialog(true)}><i className="sl sl-icon-power"></i> Log Out</button></li>

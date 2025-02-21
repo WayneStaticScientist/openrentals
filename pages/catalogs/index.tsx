@@ -37,7 +37,6 @@ export default function CatalogItem() {
         const response = await getComments(searchParams.get("q") ?? '')
         setCommentsLoading(false)
         if (typeof response === 'string') return
-        console.log("The response is ", response)
         return setComments(response)
     }
     const postComment = async () => {

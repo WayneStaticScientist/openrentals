@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { useUserState } from '@/connections/user'
 import { userLoggedIn } from '@/functions/device'
 import React, { useEffect, useState } from 'react'
-import UserProfilePic from '../pages/widgets/user-profile-image'
 import UserIconTag from '../pages/user-icon-tag'
 
 export default function HeaderView({ page, sub }: { page: string, sub?: string | null }) {
@@ -20,9 +19,9 @@ export default function HeaderView({ page, sub }: { page: string, sub?: string |
     return (
         <header id="header-container" className="fullwidth">
             <div id="header">
-                <div className="container">
+                <div className="container flex justify-between">
                     {/* <!-- Left Side Content --> */}
-                    <div className="left-side">
+                    <div className="l">
                         <div id="logo"> <Link href="/">
                             <img src="images/logo.png" alt="" /></Link> </div>
                         <div className="mmenu-trigger">
@@ -54,8 +53,8 @@ export default function HeaderView({ page, sub }: { page: string, sub?: string |
                     {/* <!-- Left Side Content / End --> */}
 
                     {/* <!-- Right Side Content / End --> */}
-                    <div className="right-side">
-                        <div className="header-widget">
+                    <div className="">
+                        <div className="flex items-center gap-x-8">
                             {loggedIn ? <UserIconTag /> :
                                 <Link href="/login" className="popup-with-zoom-anim log-in-button sign-in">
                                     <i className="icon-line-awesome-user"></i> <span>Sign In</span></Link>}

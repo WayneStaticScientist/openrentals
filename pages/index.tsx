@@ -24,11 +24,9 @@ export default function Home() {
     if (typeof data === 'string') {
       return
     }
-    console.log(data)
     setPropertyWrapper(data)
   }
   useEffect(() => {
-
     fetchProducts()
   }, [])
   return (
