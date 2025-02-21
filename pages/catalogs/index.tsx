@@ -268,18 +268,6 @@ export default function CatalogItem() {
                                                     {packet.property.stoves === '1' && <li>Stoves</li>}
                                                     {packet.property.studyRoom === '1' && <li>Study Rooms</li>}
                                                 </ul>
-
-
-                                                {/* <!-- Location --> */}
-                                                <div className="utf-desc-headline-item">
-                                                    <h3><i className="icon-material-outline-location-on"></i> Property Location</h3>
-                                                </div>
-                                                <div id="propertyMap-container">
-                                                    <div id="propertyMap" data-latitude="48.8566" data-longitude="2.3522" data-map-icon="im im-icon-Hamburger"></div>
-                                                    <a href="#" id="streetView">Street View</a>
-                                                </div>
-                                                <div className="clearfix"></div>
-                                                <div className="margin-top-35"></div>
                                             </div>
                                         </div>
                                         {/* <!-- Property Description / End --> */}
@@ -497,7 +485,7 @@ export default function CatalogItem() {
                                         {/* <!-- Sidebar / End --> */}
                                     </div>
                                     {commentsLoading ? <div></div>
-                                        : <CommentList comments={comments} />}
+                                        : <CommentList comments={comments} refreshList={fetchAllComments} />}
                                 </div>
                                 <FooterView />
 

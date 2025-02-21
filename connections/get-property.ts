@@ -220,6 +220,48 @@ export async function postPropertyComment(comment: string, postId: string) {
         return "Failed to connect to server "
     }
 }
+export async function postPropertyCommentAsReply(comment: string, postId: string) {
+    const user = getUser()
+    if (!user) return showError("Please login to comment")
+    if (postId.length < 4) return showError("not valid id?")
+    if (comment.replaceAll(" ", "").length === 0) return showError("cant send empty comment")
+    if (comment.length > 200) return showError("Characters should be less than or equal to 200")
+    try {
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` +
+            "v1/property/reply", {
+            method: "POST",
+            body: JSON.stringify({
+                comment,
+                postId
+            }),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getVariables().refreshTokens,
+                "X-device-id": getDeviceId(),
+            }
+        });
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status == 404) {
+            return `Product page not found?`
+        }
+        if (api.status == 400) {
+            const { message } = await api.json()
+            return message
+        }
+        if (api.status >= 500) {
+            return "There was internal server error"
+        }
+        if (api.status >= 401) {
+            return "You are not authorized to post comments"
+        }
+        return "There was error " + api.status + " ?"
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return "Failed to connect to server "
+    }
+}
 export async function getComments(id: string) {
     try {
         const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + "v1/property/comments/all?postId=" + id, {

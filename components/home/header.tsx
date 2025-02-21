@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { useUserState } from '@/connections/user'
 import { userLoggedIn } from '@/functions/device'
 import React, { useEffect, useState } from 'react'
+import UserProfilePic from '../pages/widgets/user-profile-image'
+import UserIconTag from '../pages/user-icon-tag'
 
 export default function HeaderView({ page, sub }: { page: string, sub?: string | null }) {
     const user = useUserState()
@@ -54,8 +56,7 @@ export default function HeaderView({ page, sub }: { page: string, sub?: string |
                     {/* <!-- Right Side Content / End --> */}
                     <div className="right-side">
                         <div className="header-widget">
-                            {loggedIn ? <Link href="/myprofile" className="popup-with-zoom-anim log-in-button sign-in">
-                                <i className="icon-line-awesome-user"></i> <span>{user.firstName}</span></Link> :
+                            {loggedIn ? <UserIconTag /> :
                                 <Link href="/login" className="popup-with-zoom-anim log-in-button sign-in">
                                     <i className="icon-line-awesome-user"></i> <span>Sign In</span></Link>}
                             <Link href="/upload" className="button border">

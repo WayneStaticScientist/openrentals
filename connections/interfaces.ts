@@ -5,16 +5,26 @@ export interface Tokens {
     accessTokens: string
     refreshTokens: string
 }
-export interface User {
-    firstName: string,
-    lastName: string
-    email: string
+export interface Notification {
+    date: number
+    tag: string
+    _id: string
     message: string
+    notificationId: string
+}
+
+export interface User {
+    email: string
     phone: string
-    idNumber: string
-    userTitle: string
     profile: string
+    message: string
+    lastName: string
+    idNumber: string
+    firstName: string,
+    userTitle: string
     verified: boolean
+    notificationSize: number
+    notifications: Notification[]
 }
 export interface Property {
     address: string

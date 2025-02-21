@@ -5,11 +5,13 @@ import Router from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { FileUploader } from 'react-drag-drop-files'
 import { CgSpinner } from 'react-icons/cg';
+import ReactCrop, { Crop } from 'react-image-crop';
 import { ToastContainer } from 'react-toastify'
 const fileTypes = ["JPG", "PNG"];
 
 export default function ChangeProfile() {
     const user = useUserState()
+    const [crop, setCrop] = useState<Crop>()
     const [loading, setLoading] = useState(false)
     const [filePhoto, setFilePhoto] = useState<File | null>(null)
     const [loggedIn, setLoggedIn] = useState(false)
@@ -86,11 +88,13 @@ export default function ChangeProfile() {
                 <>
                     <div className="margin-bottom-20">
                         <div className="utf-edit-profile-photo-area cursor-pointer">
-                            <img src={imageError ? "images/default/nouser.jpg" :
-                                uploadedPhoto}
-                                alt="" onError={() => {
-                                    setImageError(true)
-                                }} />
+                            <ReactCrop crop={crop} onChange={c => setCrop(c)}>
+                                <img src={imageError ? "images/default/nouser.jpg" :
+                                    uploadedPhoto}
+                                    alt="" onError={() => {
+                                        setImageError(true)
+                                    }} />
+                            </ReactCrop>
 
                         </div>
                     </div>
