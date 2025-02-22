@@ -63,7 +63,7 @@ export default function NotificationsPage() {
                                         <>
                                             {
                                                 user.notifications.length > 0 ? <>
-                                                    {user.notifications.map((e, i) => {
+                                                    {user.notifications.reverse().map((e, i) => {
                                                         return <div key={i}
                                                             className={`cursor-pointer flex shadow-lg p-6 justify-between  items-center gap-x-3 
                                                                 ${user.notificationClearTime <= e.date ? 'bg-gray-100 border-l-4 border-green-500 m-3' : ''}`}

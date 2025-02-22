@@ -116,7 +116,9 @@ export default function UploadsPage() {
                                                                     <h3>{e.propertyTitle}</h3>
                                                                     <span className='text-sm'>{e.address} {e.city}</span>
                                                                     <span className="text-green-500 text-center rounded-xl flex  items-center">
-                                                                        <FaDollarSign />{formatAmount(e.price)}
+                                                                        <FaDollarSign />{formatAmount(e.price)} {
+                                                                            e.propertyState === 'rent' && <span className='text-orange-700'> /{e.propertyInstallments}</span>
+                                                                        }
                                                                     </span>
                                                                 </div>
                                                             </div>

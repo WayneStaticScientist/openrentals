@@ -124,6 +124,10 @@ export class UserRegistration {
 }
 export const useUserState = create<User>(() => ({
     firstName: "",
+    notificationClearTime: 0,
+    idNumberVerified: 0,
+    emailVerified: false,
+    proofOfResidence: 0,
     lastName: "",
     notifications: [],
     notificationSize: 0,

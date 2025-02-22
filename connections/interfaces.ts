@@ -23,42 +23,66 @@ export interface User {
     firstName: string,
     userTitle: string
     verified: boolean
+    emailVerified: false
+    proofOfResidence: number
+    idNumberVerified: number
     notificationSize: number
+    cashPayment?: CashPayment | null
+    mukuruPayment?: MukuruPayment | null
     notifications: Notification[]
     notificationClearTime: number
+    ecocashPayment?: EcocashPayment | null
+}
+export interface CashPayment {
+    description: string
+}
+export interface MukuruPayment {
+    phone: string
+    fullName: string
+    idNumber: string
+    description: string
+}
+export interface EcocashPayment {
+    phone: string
+    fullName: string
+    description: string
 }
 export interface Property {
-    address: string
     area: string
-    bathrooms: number
-    views: number
-    bedrooms: number
     _id: string
-    ceiling: string
     city: string
-    description: string
-    durawall: string
-    electricity: string
-    email: string
     date: number
-    firstName: string
-    images: string[]
     owner: User
+    wifi: string
     phone: string
     price: number
+    cash: string
+    rooms: number
+    views: number
+    email: string
+    state: string
+    tiles: string
+    mukuru: string
+    stoves: string
+    address: string
+    hidden: boolean
+    ecocash: string
+    ceiling: string
+    bedrooms: number
+    images: string[]
+    security: string
+    swimming: string
+    uploader: string
+    durawall: string
+    bathrooms: number
+    firstName: string
+    studyRoom: string
+    description: string
+    electricity: string
+    propertyType: string
     propertyState: string
     propertyTitle: string
-    propertyType: string
-    rooms: number
-    security: string
-    state: string
-    stoves: string
-    studyRoom: string
-    hidden: boolean
-    swimming: string
-    tiles: string
-    uploader: string
-    wifi: string
+    propertyInstallments: string
 }
 export interface PropertyList {
     owned: boolean

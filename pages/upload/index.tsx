@@ -46,6 +46,10 @@ export default function UploadPage() {
     const [phone, setPhone] = useState("")
     const [price, setPrice] = useState('')
     const [rooms, setRooms] = useState('')
+    const [cash, setCash] = useState(true)
+    const [ecocash, setEcocash] = useState(false)
+    const [mukuru, setMukuru] = useState(false)
+    const [arshcoins, setArshcoins] = useState(false)
     const [wifi, setWifi] = useState(false)
     const [tiles, setTiles] = useState(false)
     const [solar, setSolar] = useState(false)
@@ -67,6 +71,7 @@ export default function UploadPage() {
     const [propertyTitle, setPropertyTitle] = useState("")
     const [propertyState, setPropertyState] = useState('')
     const [fileList, setFileList] = useState<ReactNode>(null)
+    const [propertyInstallments, setropertyInstallments] = useState('mon')
     const uploadFiles = async () => {
 
         if (loading) return
@@ -80,22 +85,27 @@ export default function UploadPage() {
         formData.append("rooms", rooms)
         formData.append("address", address)
         formData.append("bedrooms", bedrooms)
-        formData.append("bathrooms", bathrooms)
         formData.append("firstName", firstName)
+        formData.append("bathrooms", bathrooms)
+        formData.append("cash", cash ? "1" : "0")
         formData.append("wifi", !wifi ? '0' : '1')
-        formData.append("solar", !solar ? '0' : '1')
         formData.append("description", description)
+        formData.append("solar", !solar ? '0' : '1')
         formData.append("tiles", !tiles ? '0' : '1')
+        formData.append("mukuru", mukuru ? "1" : "0")
         formData.append("propertyType", propertyType)
         formData.append("stoves", !stoves ? '0' : '1')
+        formData.append("ecocash", ecocash ? "1" : "0")
         formData.append("propertyTitle", propertyTitle)
         formData.append("propertyState", propertyState)
         formData.append("ceiling", !ceiling ? '0' : '1')
         formData.append("security", !security ? '0' : '1')
         formData.append("durawall", !durawall ? '0' : '1')
         formData.append("swimming", !swimming ? '0' : '1')
+        formData.append("arshcoins", arshcoins ? "1" : "0")
         formData.append("studyRoom", !studyRoom ? '0' : '1')
         formData.append("electricity", !electricity ? '0' : '1')
+        formData.append("propertyInstallments", propertyInstallments)
         console.log(formData)
         for (const f of selectedFiles.current) {
             formData.append("files", f)
@@ -172,7 +182,7 @@ export default function UploadPage() {
                                     <h3>Property Basic Information</h3>
                                     <div className="content with-padding">
                                         <div className="col-md-12">
-                                            <h5>Property Title</h5>
+                                            <h5>Property Title *</h5>
                                             <input className="search-field" placeholder="Property Title" type="text"
                                                 value={propertyTitle}
                                                 onChange={(e) => setPropertyTitle(e.target.value)}
@@ -192,15 +202,15 @@ export default function UploadPage() {
                                             <select id="mySelect" value={propertyType}
                                                 onChange={(e) => setPropertyType(e.target.value)}>
                                                 <option value="">Select an option</option> {/* Default/placeholder option */}
-                                                <option value="apartment">Apartment</option>
-                                                <option value="bhouse">Boarding House</option>
-                                                <option value="house">House</option>
-                                                <option value="commercial">Commercial</option>
-                                                <option value="garage">Garage</option>
+                                                <option value="Apartment">Apartment</option>
+                                                <option value="Boarding House">Boarding House</option>
+                                                <option value="House">House</option>
+                                                <option value="Commercial">Commercial</option>
+                                                <option value="Garage">Garage</option>
                                             </select>
                                         </div>
                                         <div className="col-md-4">
-                                            <h5>Price</h5>
+                                            <h5>Price *</h5>
                                             <input className="search-field" placeholder="price in usd" type="number"
                                                 value={price}
                                                 onChange={(e) => setPrice(e.target.value)}
@@ -229,6 +239,51 @@ export default function UploadPage() {
                                                 <option value="9">9</option>
                                                 <option value="9+">9+</option>
                                             </select>
+                                        </div>
+                                        {propertyState === 'rent' &&
+                                            <>
+                                                <div className='col-md-12'>
+                                                    <h4>Installements Time</h4>
+                                                </div>
+                                                <div className='col-md-6'>
+                                                    <h2>${price} / <span className='text-red-600'>{propertyInstallments}</span></h2>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <select id="mySelect" value={propertyInstallments}
+                                                        onChange={(e) => setropertyInstallments(e.target.value)}>
+                                                        <option value="mon">month</option>
+                                                        <option value="w">week</option>
+                                                        <option value="day">day</option>
+                                                        <option value="hr">hour</option>
+                                                        <option value="sem">Semester</option>
+                                                        <option value="yr">year</option>
+                                                        <option value="2w">2 weeks</option>
+                                                        <option value="6m">6 Months</option>
+                                                    </select>
+                                                </div>
+                                            </>
+                                        }
+                                        <div className="col-md-12 select-none">
+                                            <h5>Payment Methods</h5>
+                                            <div className='flex gap-x-6 flex-wrap'>
+                                                <div className="checkbox margin-top-10 margin-bottom-10">
+                                                    <input type="checkbox" id="132" checked={cash} onChange={(e) => setCash(e.target.checked)} />
+                                                    <label htmlFor="132"><span className="checkbox-icon"></span>Cash</label>
+                                                </div>
+                                                <div className="checkbox margin-top-10 margin-bottom-10">
+                                                    <input type="checkbox" id="233" checked={ecocash} onChange={(e) => setEcocash(e.target.checked)} />
+                                                    <label htmlFor="233"><span className="checkbox-icon"></span>Ecocash</label>
+                                                </div>
+                                                <div className="checkbox margin-top-10 margin-bottom-10">
+                                                    <input type="checkbox" id="1313" checked={mukuru} onChange={(e) => setMukuru(e.target.checked)} />
+                                                    <label htmlFor="1313"><span className="checkbox-icon"></span>Mukuru</label>
+                                                </div>
+                                                <div className="checkbox margin-top-10 margin-bottom-10">
+                                                    <input type="checkbox" id="143" checked={arshcoins} onChange={(e) => setArshcoins(e.target.checked)} />
+                                                    <label htmlFor="143"><span className="checkbox-icon"></span>ArshCoins</label>
+                                                </div>
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -286,7 +341,7 @@ export default function UploadPage() {
                                     <h3>Property Information</h3>
                                     <div className="content with-padding">
                                         <div className="col-md-12">
-                                            <h5>Information</h5>
+                                            <h5>Information *</h5>
                                             <textarea placeholder="property description" value={description}
                                                 onChange={(e) => setDescription(e.target.value)} />
                                         </div>

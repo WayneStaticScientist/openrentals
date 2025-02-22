@@ -17,6 +17,7 @@ import OpenChainsDialog from '@/components/pages/widgets/open-chains-dialog';
 import BannerPage from '@/components/pages/banner-page';
 import { useSearchParams } from 'next/navigation';
 import CommentList from '@/components/pages/widgets/comments-list';
+import Image from 'next/image';
 const HeaderView = dynamic(() => import('@/components/home/header'), { ssr: false });
 export default function CatalogItem() {
     const searchParams = useSearchParams();
@@ -173,7 +174,10 @@ export default function CatalogItem() {
                                             <div id="titlebar-dtl-item" className="property-titlebar margin-bottom-0">
                                                 <div className="property-title">
                                                     <div className='flex flex-wrap gap-x-5'>
-                                                        <div className="property-pricing">${formatAmount(packet.property.price, 3)}</div>
+                                                        <div className="property-pricing">${formatAmount(packet.property.price, 2)}
+                                                            {packet.property.propertyState === 'rent' && <div className='text-white inline'>/{packet.property.propertyInstallments}</div>
+                                                            }
+                                                        </div>
                                                         <div className=" flex flex-row gap-x-3 items-center "><FaEye />{formatAmount(packet.property.views, 0)} views</div>
                                                     </div>
                                                     <h2>{packet.property.propertyTitle} <span className="property-badge-sale">For {packet.property.propertyState} </span></h2>
@@ -186,7 +190,7 @@ export default function CatalogItem() {
                                                         <li>Area<span>{packet.property.area}</span></li>
                                                     </ul>
                                                 </div>
-                                                {packet.owned &&
+                                                {packet.owned ?
                                                     <div className='flex gap-x-8 items-center flex-wrap p-3 mt-8'>
                                                         <button className='gap-2 flex items-center p-3 rounded-xl bg-red-600 text-white'
                                                             onClick={() => setDeleteDialog(true)}>
@@ -208,6 +212,42 @@ export default function CatalogItem() {
                                                                             <CgSpinner className='animate-spin' /> :
                                                                             <><MdOutlineHideSource />hide</>
                                                                     }</button>
+                                                        }
+                                                    </div>
+                                                    :
+                                                    <div className='mt-12 flex flex-wrap gap-x-6'>
+                                                        {packet.property.cash === "1" &&
+                                                            <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
+                                                                onClick={() => {
+                                                                    if (!packet.property.owner.cashPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
+                                                                }}>
+                                                                <Image src='/images/logos/cash.jpg' className='  rounded-3xl w-32 h-14' alt='ecocash'
+                                                                    width={556}
+                                                                    height={212}
+                                                                />
+                                                            </div>
+                                                        }
+                                                        {packet.property.ecocash === "1" &&
+                                                            <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
+                                                                onClick={() => {
+                                                                    if (!packet.property.owner.ecocashPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
+                                                                }}>
+                                                                <Image src='/images/logos/ecocash.jpg' className='  rounded-3xl w-32 h-14' alt='ecocash'
+                                                                    width={556}
+                                                                    height={212}
+                                                                />
+                                                            </div>
+                                                        }
+                                                        {packet.property.mukuru === "1" &&
+                                                            <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
+                                                                onClick={() => {
+                                                                    if (!packet.property.owner.mukuruPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
+                                                                }}>
+                                                                <Image src='/images/logos/mukuru.jpg' className=' rounded-3xl w-32 h-14' alt='ecocash'
+                                                                    width={556}
+                                                                    height={212}
+                                                                />
+                                                            </div>
                                                         }
                                                     </div>
                                                 }
@@ -343,7 +383,7 @@ export default function CatalogItem() {
                                                             <button className="button fullwidth margin-top-5" onClick={() => {
                                                                 if (!packet.registered) return showError("please login to comment")
                                                                 postComment()
-                                                            }}>Post Comment</button>
+                                                            }}>{commenting ? <CgSpinner className='w-full text-center animate-spin' /> : <>Post Comment</>}</button>
                                                         </>}
                                                     </div>
                                                 </div>

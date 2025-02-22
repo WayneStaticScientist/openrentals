@@ -70,13 +70,13 @@ export async function getProducts(params: SearchFilter) {
 }
 export async function hideItem(id: string, hide: boolean) {
     const userRegistration = new UserRegistration()
-    const data = await userRegistration.fetchUser()
+    const data = await userRegistration.fetchUser({ retry: true })
     if (typeof data === 'string') {
         return data
     }
     try {
         const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` +
-            "v1/hide", {
+            "v1/property/hide", {
             method: "POST",
             body: JSON.stringify({
                 propertyId: id,
@@ -110,13 +110,13 @@ export async function hideItem(id: string, hide: boolean) {
 
 export async function deleteItem(id: string) {
     const userRegistration = new UserRegistration()
-    const data = await userRegistration.fetchUser()
+    const data = await userRegistration.fetchUser({ retry: true })
     if (typeof data === 'string') {
         return data
     }
     try {
         const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` +
-            "v1/delete", {
+            "v1/property/delete", {
             method: "POST",
             body: JSON.stringify({
                 propertyId: id,

@@ -2,9 +2,10 @@ import { useUserState } from '@/connections/user'
 import React from 'react'
 import OpenImageLoader from './widgets/classic-image-loader,'
 import Router from 'next/router'
+import { MdVerified } from 'react-icons/md'
 
 export default function UserIconTag() {
-    const { notificationSize, firstName, profile } = useUserState()
+    const { notificationSize, firstName, profile, emailVerified, proofOfResidence, idNumberVerified } = useUserState()
     return (
         <>
             <div className="flex items-center cursor-pointer">
@@ -24,7 +25,13 @@ export default function UserIconTag() {
                             top: 0
                         }}>{notificationSize}</span>
                     }
-                    <div className="user-name-title">Hi, {firstName}!
+                    <div className="user-name-title flex flex-col justify-center">
+                        <div className='flex items-center gap-x-2'>Hi, {firstName}! {
+                            (emailVerified && proofOfResidence && idNumberVerified) && <MdVerified className='text-green-500' />
+                        }</div>
+                        {!(emailVerified && proofOfResidence && idNumberVerified) &&
+                            <div style={{ fontSize: 12 }} className=' border-red-500 border-2 rounded-full text-red-500  w-full text-center'>
+                                unverified</div>}
                     </div>
                 </div>
 

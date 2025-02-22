@@ -88,7 +88,7 @@ export default function ContentListing({ loading, list, fromSearch, searchTitle 
                                             </span>
                                             <div className="flex flex-col">
                                                 <div className="p-6">
-                                                    <span className="utf-listing-price bg-green-500 rounded-lg p-3 text-white">${e.price}</span>
+                                                    <span className="utf-listing-price bg-green-500 rounded-lg p-3 text-white">${e.price}{e.propertyState === "rent" && <>/{e.propertyInstallments}</>}</span>
                                                     <h4><a href={`/catalogs?q=${e._id}`}>{e.propertyTitle}</a></h4>
                                                     <span className="utf-listing-address"><i className="icon-material-outline-location-on"></i> {e.address} {e.city}</span>
                                                 </div>

@@ -24,7 +24,8 @@ export default function FeaturedComponents({ properties }: { properties: Propert
                                             <Link href={`/catalogs?q=${e._id}`} className="utf-smt-listing-img-container">
                                                 <div className="utf-listing-badges-item"> <span className="featured">Featured</span> <span className="for-sale">For {e.propertyState}</span> </div>
                                                 <div className="utf-listing-img-content-item">
-                                                    <span className="utf-listing-compact-title-item">{e.propertyTitle} <i>${formatAmount(e.price, 3)}</i></span>
+                                                    <span className="utf-listing-compact-title-item">{e.propertyTitle}
+                                                        <i>${formatAmount(e.price, 2)}{e.propertyState === "rent" && <>/{e.propertyInstallments}</>}</i></span>
                                                 </div>
                                                 <img
                                                     className='w-96 h-96'

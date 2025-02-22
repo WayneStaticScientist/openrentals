@@ -57,6 +57,30 @@ export default function MyProfile() {
                     <div className="row">
                         <ProfileReview page='myprofile' />
                         <div className="col-md-9">
+                            {!user.emailVerified ? <div className="notification error closeable margin-bottom-30 flex items-center justify-between">
+                                <p> Your email is not verified</p>
+                                <button className='button btn-error '>verify now</button>
+                            </div>
+                                : <div className="notification success  margin-bottom-30">
+                                    <p><span>Email!</span> Your email is verified</p>
+                                </div>
+                            }
+                            {user.idNumberVerified === 0 ? <div className="notification error closeable margin-bottom-30 flex items-center justify-between">
+                                <p>Your identity is not verified</p>
+                                <button className='button btn-error '>verify now</button>
+                            </div>
+                                : <div className="notification success  margin-bottom-30">
+                                    <p><span>Email!</span> Your Id is verified</p>
+                                </div>
+                            }
+                            {user.proofOfResidence === 0 ? < div className="notification error closeable margin-bottom-30 flex items-center justify-between">
+                                <p>Your proof of residence is not verified</p>
+                                <button className='button btn-error '>verify now</button>
+                            </div>
+                                : <div className="notification success  margin-bottom-30">
+                                    <p><span>Email!</span> Your email is verified</p>
+                                </div>
+                            }
                             <div className="utf-user-profile-item">
                                 <div className="utf-submit-page-inner-box">
                                     <h3>My Account</h3>
@@ -128,7 +152,7 @@ export default function MyProfile() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     )
 }
