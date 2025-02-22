@@ -59,7 +59,9 @@ export default function MyProfile() {
                         <div className="col-md-9">
                             {!user.emailVerified ? <div className="notification error closeable margin-bottom-30 flex items-center justify-between">
                                 <p> Your email is not verified</p>
-                                <button className='button btn-error '>verify now</button>
+                                <button className='button btn-error ' onClick={() => {
+                                    Router.push("/verification/email")
+                                }}>verify now</button>
                             </div>
                                 : <div className="notification success  margin-bottom-30">
                                     <p><span>Email!</span> Your email is verified</p>

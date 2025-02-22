@@ -4,7 +4,7 @@ import OpenImageLoader from './widgets/classic-image-loader,'
 import Router from 'next/router'
 import { MdVerified } from 'react-icons/md'
 
-export default function UserIconTag() {
+export default function UserIconTag({ textStyle }: { textStyle?: string | null }) {
     const { notificationSize, firstName, profile, emailVerified, proofOfResidence, idNumberVerified } = useUserState()
     return (
         <>
@@ -14,7 +14,7 @@ export default function UserIconTag() {
                     Router.push("/myprofile")
                 }}>
                     <OpenImageLoader path={profile} className=' flex items-center rounded-full'
-                        errorPath={'images/default/nouser.jpg'} style={{
+                        errorPath={'../images/default/nouser.jpg'} style={{
                             width: 45,
                             height: 45
                         }} />
@@ -26,7 +26,7 @@ export default function UserIconTag() {
                         }}>{notificationSize}</span>
                     }
                     <div className="user-name-title flex flex-col justify-center">
-                        <div className='flex items-center gap-x-2'>Hi, {firstName}! {
+                        <div className={`flex items-center gap-x-2 ${textStyle}`}>Hi, {firstName}! {
                             (emailVerified && proofOfResidence && idNumberVerified) && <MdVerified className='text-green-500' />
                         }</div>
                         {!(emailVerified && proofOfResidence && idNumberVerified) &&

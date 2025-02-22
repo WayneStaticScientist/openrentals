@@ -9,6 +9,7 @@ import { getLastDay } from '@/functions/time-format';
 import NoResults from '@/components/pages/widgets/no-results';
 import { UserRegistration, useUserState } from '@/connections/user';
 import ProfileReview from '@/components/pages/widgets/profile-review';
+import { StaticStates } from '@/functions/static-states';
 const HeaderView = dynamic(() => import("@/components/home/header"), { ssr: false });
 const BannerPage = dynamic(() => import('@/components/pages/banner-page'), { ssr: false });
 export default function NotificationsPage() {
@@ -68,7 +69,9 @@ export default function NotificationsPage() {
                                                             className={`cursor-pointer flex shadow-lg p-6 justify-between  items-center gap-x-3 
                                                                 ${user.notificationClearTime <= e.date ? 'bg-gray-100 border-l-4 border-green-500 m-3' : ''}`}
                                                             onClick={() => {
-                                                                Router.push("/catalogs?q=" + e._id)
+                                                                if (e.tag === StaticStates.TAG_LISTING) {
+                                                                    Router.push("/catalogs?q=" + e.notificationId)
+                                                                }
                                                             }}>
                                                             <div className='flex gap-x-3'>
                                                                 <span className='p-3 rounded-full bg-green-500 text-white'><IoIosNotifications /></span>

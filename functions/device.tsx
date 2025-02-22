@@ -48,7 +48,7 @@ export function userLoggedIn(register: boolean = false): boolean {
     try {
         if (register) {
             const user = new UserRegistration()
-            const resp = user.fetchUser()
+            const resp = user.fetchUser({ retry: true })
             if (typeof resp === 'string') {
                 clearSavedLogss()
                 return false
