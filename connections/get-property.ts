@@ -319,3 +319,78 @@ export async function verifyEmail(email: string) {
         return "Failed to connect to server "
     }
 }
+export async function AdminVerifyId(email: string, reason: string, verified: boolean) {
+    try {
+        const userReg = new UserRegistration()
+        const response = await userReg.fetchUser({ retry: true })
+        if (typeof response === 'string') return response
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/user/id/confirm?email=' +
+            email + "&action=" + (verified ? 'approve' : 'declined') +
+            '&reason=' + reason,
+            {
+                headers: {
+                    "Authorization": "Bearer " + getVariables().accessTokens,
+                    "X-device-id": getDeviceId(),
+                },
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}
+
+export async function AdminVerifyResidence(email: string, reason: string, verified: boolean) {
+    try {
+        const userReg = new UserRegistration()
+        const response = await userReg.fetchUser({ retry: true })
+        if (typeof response === 'string') return response
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/user/residence/confirm?email=' +
+            email + "&action=" + (verified ? 'approve' : 'declined') +
+            '&reason=' + reason,
+            {
+                headers: {
+                    "Authorization": "Bearer " + getVariables().accessTokens,
+                    "X-device-id": getDeviceId(),
+                },
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}

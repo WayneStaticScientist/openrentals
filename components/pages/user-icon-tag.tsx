@@ -27,9 +27,9 @@ export default function UserIconTag({ textStyle }: { textStyle?: string | null }
                     }
                     <div className="user-name-title flex flex-col justify-center">
                         <div className={`flex items-center gap-x-2 ${textStyle}`}>Hi, {firstName}! {
-                            (emailVerified && proofOfResidence && idNumberVerified) && <MdVerified className='text-green-500' />
+                            (emailVerified && proofOfResidence == 2 && idNumberVerified == 2) && <MdVerified className='text-green-500' />
                         }</div>
-                        {!(emailVerified && proofOfResidence && idNumberVerified) &&
+                        {!(emailVerified && proofOfResidence === 2 && idNumberVerified == 2) &&
                             <div style={{ fontSize: 12 }} className=' border-red-500 border-2 rounded-full text-red-500  w-full text-center'>
                                 unverified</div>}
                     </div>

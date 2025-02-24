@@ -16,21 +16,25 @@ export interface Notification {
 export interface User {
     email: string
     phone: string
+    city: string
     profile: string
     message: string
     lastName: string
+    address: string
     idNumber: string
     firstName: string,
     userTitle: string
     verified: boolean
+    documentsID: string
     emailVerified: false
     proofOfResidence: number
     idNumberVerified: number
     notificationSize: number
-    cashPayment?: CashPayment | null
-    mukuruPayment?: MukuruPayment | null
+    documentsResidence: string
     notifications: Notification[]
     notificationClearTime: number
+    cashPayment?: CashPayment | null
+    mukuruPayment?: MukuruPayment | null
     ecocashPayment?: EcocashPayment | null
 }
 export interface CashPayment {

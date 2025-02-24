@@ -64,24 +64,50 @@ export default function MyProfile() {
                                 }}>verify now</button>
                             </div>
                                 : <div className="notification success  margin-bottom-30">
-                                    <p><span>Email!</span> Your email is verified</p>
+                                    <p>Your email is verified</p>
                                 </div>
                             }
-                            {user.idNumberVerified === 0 ? <div className="notification error closeable margin-bottom-30 flex items-center justify-between">
+                            {user.idNumberVerified === 0 || !user.idNumberVerified ? <div className="notification error closeable margin-bottom-30 flex items-center justify-between">
                                 <p>Your identity is not verified</p>
-                                <button className='button btn-error '>verify now</button>
+                                <button className='button btn-error ' onClick={() => {
+                                    Router.push("/verification/identity")
+                                }}>verify now</button>
                             </div>
-                                : <div className="notification success  margin-bottom-30">
-                                    <p><span>Email!</span> Your Id is verified</p>
-                                </div>
+                                :
+                                <>
+                                    {
+                                        user.idNumberVerified === 1 ?
+                                            <div className="notification warning margin-bottom-30">
+                                                <span>Identity Verification</span> <p>
+                                                    You have submitted your documents for review . There are under review .
+                                                    You will be notified when verified or declined
+                                                </p>
+                                            </div> :
+                                            <div className="notification success  margin-bottom-30">
+                                                <p>Your Id is verified</p>
+                                            </div>}
+                                </>
                             }
-                            {user.proofOfResidence === 0 ? < div className="notification error closeable margin-bottom-30 flex items-center justify-between">
-                                <p>Your proof of residence is not verified</p>
-                                <button className='button btn-error '>verify now</button>
+                            {user.proofOfResidence === 0 || !user.proofOfResidence ? <div className="notification error closeable margin-bottom-30 flex items-center justify-between">
+                                <p>Your Proof of Residence is not verified</p>
+                                <button className='button btn-error ' onClick={() => {
+                                    Router.push("/verification/residence")
+                                }}>verify now</button>
                             </div>
-                                : <div className="notification success  margin-bottom-30">
-                                    <p><span>Email!</span> Your email is verified</p>
-                                </div>
+                                :
+                                <>
+                                    {
+                                        user.proofOfResidence === 1 ?
+                                            <div className="notification warning margin-bottom-30">
+                                                <span>Residence Verification</span> <p>
+                                                    You have submitted your documents for review . There are under review .
+                                                    You will be notified when verified or declined
+                                                </p>
+                                            </div> :
+                                            <div className="notification success  margin-bottom-30">
+                                                <p>Your Proof Of Residence is verified</p>
+                                            </div>}
+                                </>
                             }
                             <div className="utf-user-profile-item">
                                 <div className="utf-submit-page-inner-box">

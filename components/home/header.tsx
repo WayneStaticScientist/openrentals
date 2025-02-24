@@ -7,17 +7,38 @@ import UserIconTag from '../pages/user-icon-tag'
 export default function HeaderView({ page, sub }: { page: string, sub?: string | null }) {
     const user = useUserState()
     const [loggedIn, setLoggedIn] = useState(false)
+    const [staticClass, setStaticClass] = useState(false)
+    const handleScroll = () => {
+        console.log(window.scrollY)
+        if (window.scrollY > 400) {
+            if (!staticClass)
+                setStaticClass(true)
+        } else {
+            setStaticClass(false)
+        }
+    }
     useEffect(() => {
         if (user.email.length < 1) {
             if (userLoggedIn()) {
                 setLoggedIn(true)
+                window.addEventListener('scroll', handleScroll); // Attach event listener
             }
         } else {
             setLoggedIn(true)
         }
     }, [user.email.length])
     return (
-        <header id="header-container" className="fullwidth">
+        <header id="header-container" className="fullwidth"
+            style={{
+                position: staticClass ? "fixed" : undefined,
+                backgroundColor: staticClass ? "white" : undefined,
+                top: staticClass ? 0 : undefined,
+                left: staticClass ? 0 : undefined,
+                right: staticClass ? 0 : undefined,
+                zIndex: staticClass ? 200 : undefined,
+                transition: 'transform 1s',
+                transform: staticClass ? 'translateY(0)' : 'translateY(0)'
+            }}>
             <div id="header">
                 <div className="container flex justify-between">
                     {/* <!-- Left Side Content --> */}

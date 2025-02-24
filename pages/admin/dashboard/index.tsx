@@ -1,3 +1,5 @@
+import PendingIds from '@/components/pages/pending-ids';
+import PendingResidences from '@/components/pages/pending-residences';
 import UserIconTag from '@/components/pages/user-icon-tag';
 import { UserRegistration, useUserState } from '@/connections/user';
 import Router from 'next/router';
@@ -5,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { AiFillDashboard } from 'react-icons/ai';
 import { FaAddressCard } from 'react-icons/fa';
 import { ProgressBar } from 'react-loader-spinner';
+import { ToastContainer } from 'react-toastify';
 
 export default function DashBoard() {
     const user = useUserState();
@@ -25,6 +28,7 @@ export default function DashBoard() {
     }, [])
     return (
         <>
+            <ToastContainer />
             {
                 loading ?
                     <div className='w-screen h-screen flex items-center justify-center'>
@@ -36,7 +40,7 @@ export default function DashBoard() {
                         height: "100vh"
                     }}>
 
-                        <div className='w-full h-ful bg-gray-900 flex flex-col overflow-y-auto p-8 gap-y-6'
+                        <div className='w-full h-ful bg-gray-900 flex flex-col overflow-y-auto p-8 gap-y-6 select-none'
                             style={{ maxWidth: "300px" }}>
                             <div className='w-full flex items-center p-12'>
                                 <UserIconTag textStyle='text-white' />
@@ -46,15 +50,22 @@ export default function DashBoard() {
                                     fontSize: 12
                                 }}>DashBoard
                             </span>
-                            <div className={`flex items-center gap-x-3 p-6 ${page === 0 && 'bg-[#ff00002c]'}  cursor-pointer  text-white`}><AiFillDashboard />Dashboard</div>
+                            <div className={`flex items-center gap-x-3 p-6 ${page === 0 && 'bg-[#ff00002c]'}  cursor-pointer  text-white`}>
+                                <AiFillDashboard />Dashboard</div>
                             < span className='text-gray-300' style=
                                 {{
                                     fontSize: 12
                                 }}>MenuWSS
                             </span>
-                            <div className={`flex items-center ml-6 gap-x-3 p-6 ${page === 1 && 'bg-[#ff00002c]'} cursor-pointer text-white`}><FaAddressCard />Pending Ids</div>
-                            <div className={`flex items-center ml-6 gap-x-3 p-6 ${page === 2 && 'bg-[#ff00002c]'}  cursor-pointer  text-white`}><AiFillDashboard />Pending Residents</div>
+                            <div className={`flex items-center ml-6 gap-x-3 p-6 ${page === 1 && 'bg-[#ff00002c]'} cursor-pointer text-white`}
+                                onClick={() => setPage(1)}>
+                                <FaAddressCard />Pending Ids</div>
+                            <div className={`flex items-center ml-6 gap-x-3 p-6 ${page === 2 && 'bg-[#ff00002c]'}  cursor-pointer  text-white`}
+                                onClick={() => setPage(2)}>
+                                <AiFillDashboard />Pending Residents</div>
                         </div>
+                        {page === 1 && <PendingIds />}
+                        {page === 2 && <PendingResidences />}
                     </div>
             }
         </>
