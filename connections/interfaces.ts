@@ -39,17 +39,22 @@ export interface User {
 }
 export interface CashPayment {
     description: string
+    active?: boolean | undefined
 }
 export interface MukuruPayment {
     phone: string
+    address: string
     fullName: string
     idNumber: string
     description: string
+    active?: boolean | undefined
 }
 export interface EcocashPayment {
+    type: string
     phone: string
     fullName: string
     description: string
+    active?: boolean | undefined
 }
 export interface Property {
     area: string

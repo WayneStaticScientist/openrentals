@@ -417,7 +417,7 @@ export default function UploadPage() {
                                     <h3>Property Contact Details</h3>
                                     <div className="content with-padding">
                                         <div className="col-md-4">
-                                            <h5>Full Name</h5>
+                                            <h5>Name</h5>
                                             <input type="text" placeholder="Name" value={firstName}
                                                 onChange={(e) => setFirstName(e.target.value)} />
                                         </div>

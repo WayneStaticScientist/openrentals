@@ -4,18 +4,37 @@ import React, { useEffect, useState } from 'react'
 import { UserRegistration, useUserState } from '@/connections/user';
 import ProfileReview from '@/components/pages/widgets/profile-review';
 import { ProgressBar } from 'react-loader-spinner';
+import { UpdateUser } from '@/connections/get-property';
+import { showError, showSuccess } from '@/functions/toast';
+import { CgSpinner } from 'react-icons/cg';
+import { ToastContainer } from 'react-toastify';
+import { User } from '@/connections/interfaces';
 const HeaderView = dynamic(() => import("@/components/home/header"), { ssr: false });
 const BannerPage = dynamic(() => import('@/components/pages/banner-page'), { ssr: false });
 
 export default function MyProfile() {
     const user = useUserState();
+    const [city, setCity] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
+    const [address, setAddress] = useState("")
     const [message, setMessage] = useState("")
     const [lastName, setLastName] = useState("")
+    const [idNumber, setNationalId] = useState("")
     const [firstName, setFirstName] = useState("")
     const [userTitle, setUserTitle] = useState("")
     const [loggedIn, setLoggedIn] = useState(false)
+    const [updatingUser, setUpdatingUser] = useState(false)
+    const updateUser = async () => {
+        if (lastName.length < 3) return showError("enter valid lastname")
+        if (firstName.length < 3) return showError("enter valid firstname")
+        if (email.length < 4) return showError("enter valid email")
+        setUpdatingUser(true)
+        const user = await UpdateUser({ city, email, phone, address, message, firstName, lastName, userTitle, idNumber })
+        setUpdatingUser(false)
+        if (typeof user === 'string') return showError(user)
+        showSuccess("User updated successfully")
+    }
     const login = async () => {
         const userReg = new UserRegistration()
         const resp = await userReg.fetchUser({ retry: true })
@@ -23,13 +42,17 @@ export default function MyProfile() {
             Router.push("/login")
             return
         }
+        const userResp = resp as User;
         setLoggedIn(true)
-        setEmail(user.email)
-        setPhone(user.phone)
-        setMessage(user.message)
-        setLastName(user.lastName)
-        setUserTitle(user.userTitle)
-        setFirstName(user.firstName);
+        setCity(userResp.city)
+        setEmail(userResp.email)
+        setPhone(userResp.phone)
+        setAddress(userResp.address)
+        setMessage(userResp.message)
+        setLastName(userResp.lastName)
+        setUserTitle(userResp.userTitle)
+        setNationalId(userResp.idNumber)
+        setFirstName(userResp.firstName);
     }
     useEffect(() => {
         login()
@@ -41,6 +64,7 @@ export default function MyProfile() {
     }
     return (
         <>
+            <ToastContainer />
             <div id="wrapper">
                 <HeaderView page='user' sub={'myprofile'} />
                 <BannerPage title={'Profile'} path={[
@@ -115,29 +139,40 @@ export default function MyProfile() {
                                     <div className="content with-padding">
                                         <div className="col-md-6">
                                             <label>Your Name</label>
-                                            <input value={firstName} type="text" />
+                                            <input value={firstName} type="text" onChange={(e) => setFirstName(e.target.value)} />
                                         </div>
                                         <div className="col-md-6">
                                             <label>Your LastName</label>
-                                            <input value={lastName} type="text" />
+                                            <input value={lastName} type="text" onChange={(e) => setLastName(e.target.value)} />
                                         </div>
                                         <div className="col-md-6">
                                             <label>Your Title</label>
-                                            <input value={userTitle} type="text" />
+                                            <input value={userTitle} type="text" onChange={(e) => setUserTitle(e.target.value)} />
                                         </div>
                                         <div className="col-md-6">
                                             <label>Phone Number</label>
-                                            <input value={phone} type="text" />
+                                            <input value={phone} type="text" onChange={(e) => setPhone(e.target.value)} />
+                                        </div>
+                                        <div className="col-md-6 select-none">
+                                            <label>Email Address</label>
+                                            <input value={email} type="text" onChange={(e) => setEmail(e.target.value)} />
                                         </div>
                                         <div className="col-md-6">
-                                            <label>Email Address</label>
-                                            <input value={email} type="text" />
+                                            <label>Nation Id</label>
+                                            <input value={idNumber} type="text" onChange={(e) => setNationalId(e.target.value)} />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label>Home Address</label>
+                                            <input value={address} type="text" onChange={(e) => setAddress(e.target.value)} />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label>City</label>
+                                            <input value={city} type="text" onChange={(e) => setCity(e.target.value)} />
                                         </div>
                                         <div className="col-md-12 margin-bottom-0">
                                             <label>Message</label>
                                             <textarea name="about" id="about" cols={20}
-                                                rows={5}>
-                                                {message}
+                                                rows={5} onChange={(e) => setMessage(e.target.value)} value={message}>
                                             </textarea>
                                         </div>
                                     </div>
@@ -173,7 +208,13 @@ export default function MyProfile() {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <button className="utf-centered-button button margin-top-0 margin-bottom-20">Save Changes</button>
+                                        <button className="utf-centered-button button margin-top-0 margin-bottom-20"
+                                            onClick={() => !updatingUser && updateUser()}>
+                                            {updatingUser ?
+                                                <CgSpinner className='w-full text-center animate-spin' /> :
+                                                <>Save Changes</>
+                                            }
+                                        </button>
                                     </div>
                                 </div>
                             </div>

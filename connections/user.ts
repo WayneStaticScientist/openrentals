@@ -33,7 +33,7 @@ export class UserRegistration {
     async register(data: object) {
 
         try {
-            const api = await fetch(this.address + "v1/signup", {
+            const api = await fetch(this.address + "v1/user/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export class UserRegistration {
             if (api.ok) {
                 const data = await api.json() as Tokens
                 setVariables(data)
-                return await this.fetchUser({})
+                return await this.fetchUser({ retry: true })
             }
             return this.getExtractError(api)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -129,6 +129,10 @@ export const useUserState = create<User>(() => ({
     emailVerified: false,
     proofOfResidence: 0,
     lastName: "",
+    city: "",
+    documentsID: "",
+    documentsResidence: "",
+    address: "",
     notifications: [],
     notificationSize: 0,
     email: "",

@@ -1,5 +1,5 @@
 import { getVariables, getDeviceId, getUser } from "@/functions/device";
-import { SearchFilter } from "./interfaces";
+import { MukuruPayment, SearchFilter } from "./interfaces";
 import { UserRegistration } from "./user";
 import { showError } from "@/functions/toast";
 
@@ -370,6 +370,151 @@ export async function AdminVerifyResidence(email: string, reason: string, verifi
                     "Authorization": "Bearer " + getVariables().accessTokens,
                     "X-device-id": getDeviceId(),
                 },
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}
+
+export async function UpdateUser(data: object) {
+    try {
+        const userReg = new UserRegistration()
+        const response = await userReg.fetchUser({ retry: true })
+        if (typeof response === 'string') return response
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/user/update',
+            {
+                headers: {
+                    "X-device-id": getDeviceId(),
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + getVariables().accessTokens,
+                },
+                method: "PUT",
+                body: JSON.stringify(data),
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}
+export async function UpdateEcocashState(data: object) {
+    try {
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/user/register/ecocash',
+            {
+                headers: {
+                    "X-device-id": getDeviceId(),
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + getVariables().refreshTokens,
+                },
+                method: "PUT",
+                body: JSON.stringify(data),
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}
+export async function UpdateCashState(data: object) {
+    try {
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/user/register/cash',
+            {
+                headers: {
+                    "X-device-id": getDeviceId(),
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + getVariables().refreshTokens,
+                },
+                method: "PUT",
+                body: JSON.stringify(data),
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}
+
+export async function UpdateMukuruState(data: MukuruPayment) {
+    try {
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/user/register/mukuru',
+            {
+                headers: {
+                    "X-device-id": getDeviceId(),
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + getVariables().refreshTokens,
+                },
+                method: "PUT",
+                body: JSON.stringify(data),
             }
         )
         if (api.ok) {

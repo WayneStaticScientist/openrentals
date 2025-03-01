@@ -7,7 +7,9 @@ export default function FooterView() {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-4 col-sm-12 col-xs-12">
-                            <a href="index-2.html"><img className="footer-logo" src="images/footer_logo.png" alt="" /></a>
+                            <a href="index-2.html">
+                                <img className="footer-logo" src="/images/footer_logo.png" alt="" />
+                            </a>
                             <p>Lorem Ipsum is simply dummy text of printing and type setting industry. Lorem Ipsum been industry standard dummy text ever since, when unknown printer took a galley type scrambled.</p>
                         </div>
                         <div className="col-md-2 col-sm-3 col-xs-6">

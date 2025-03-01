@@ -57,6 +57,7 @@ export default function ProfileReview({ page }: { page: string }) {
                             </Link>
                             </li>
                             <li><Link href="/upload" className={page == 'upload' ? "current" : ""}><i className="sl sl-icon-action-redo"></i> New Property</Link></li>
+                            <li><a href="/user/payment-setup"><i className="sl sl-icon-wallet"></i>Payment Setup</a></li>
                             <li><a href="change-password.html"><i className="sl sl-icon-lock"></i> Change Password</a></li>
                             <li><button onClick={() => setDialog(true)}><i className="sl sl-icon-power"></i> Log Out</button></li>
                         </ul>

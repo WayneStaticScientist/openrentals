@@ -21,7 +21,7 @@ export default function BannerView({ listings }: { listings: ListingInfo }) {
                             <div className="col-md-12">
                                 <div className="search-container">
                                     <h2>Find Your Dream House</h2>
-                                    <div className="announce">From as low as $10 per day with limited time offer discounts.</div>
+                                    <div className="announce">From as low as $1 per day with limited time offer discounts.</div>
                                     <div className="row with-forms">
                                         <div className="col-md-2">
                                             <select data-placeholder="Select City"
@@ -70,10 +70,17 @@ export default function BannerView({ listings }: { listings: ListingInfo }) {
                                     <div className="row">
                                         <h4 className="utf-cat-home-item-list">What are you looking for?</h4>
                                         <ul className="utf-home-iconbox">
-                                            <li className="list-inline-item"><div className="icon"><span className="icon-line-awesome-building"></span><p>Modern Villa</p></div></li>
-                                            <li className="list-inline-item"><div className="icon"><span className="icon-feather-home"></span><p>Family House</p></div></li>
-                                            <li className="list-inline-item"><div className="icon"><span className="icon-material-outline-location-city"></span><p>Town House</p></div></li>
-                                            <li className="list-inline-item"><div className="icon"><span className="icon-material-outline-business"></span><p>Apartment</p></div></li>
+                                            <li className="list-inline-item"
+                                                onClick={() => { Router.push("/listings?propertyType=commercial") }}
+                                            ><div className="icon"><span className="icon-line-awesome-building"></span><p>Commercial</p></div></li>
+                                            <li className="list-inline-item" onClick={() => { Router.push("/listings?propertyType=boarding-houses") }}>
+                                                <div className="icon"><span className="icon-feather-home"></span><p>Boarding House</p></div>
+                                            </li>
+                                            <li className="list-inline-item" onClick={() => { Router.push("/listings?propertyType=residential") }}>
+                                                <div className="icon"><span className="icon-material-outline-location-city"
+                                                ></span><p>Residential</p>
+                                                </div></li>
+                                            <li className="list-inline-item" onClick={() => { Router.push("/listings?propertyType=apartments") }}><div className="icon"><span className="icon-material-outline-business"></span><p>Apartment</p></div></li>
                                         </ul>
                                     </div>
                                 </div>

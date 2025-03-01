@@ -44,7 +44,7 @@ export default function HeaderView({ page, sub }: { page: string, sub?: string |
                     {/* <!-- Left Side Content --> */}
                     <div className="l">
                         <div id="logo"> <Link href="/">
-                            <img src="images/logo.png" alt="" /></Link> </div>
+                            <img src="../images/logo.png" alt="" /></Link> </div>
                         <div className="mmenu-trigger">
                             <button className="hamburger hamburger--collapse" type="button"> <span className="hamburger-box"> <span className="hamburger-inner"></span> </span> </button>
                         </div>
