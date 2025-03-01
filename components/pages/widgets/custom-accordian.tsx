@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { IoIosArrowDropdown } from 'react-icons/io';
-import { IoCheckmarkDoneSharp } from 'react-icons/io5';
 import { MdOutlineRemoveDone } from 'react-icons/md';
 import { TbPlayerRecordFilled } from 'react-icons/tb';
 

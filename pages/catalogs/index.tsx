@@ -18,6 +18,7 @@ import BannerPage from '@/components/pages/banner-page';
 import { useSearchParams } from 'next/navigation';
 import CommentList from '@/components/pages/widgets/comments-list';
 import Image from 'next/image';
+import { RouteToPaymentGateway } from '@/components/pages/forms/payment-forms';
 const HeaderView = dynamic(() => import('@/components/home/header'), { ssr: false });
 export default function CatalogItem() {
     const searchParams = useSearchParams();
@@ -26,12 +27,14 @@ export default function CatalogItem() {
     const [comment, setComment] = useState("")
     const [loading, setLoading] = useState(true)
     const [showMore, setShowMore] = useState(false)
+    const [paymentId, setPaymentId] = useState("cash")
     const [hideDialog, setHideDialog] = useState(false)
     const [commenting, setCommenting] = useState(false)
     const [loadingHide, setLoadingHide] = useState(false)
     const [comments, setComments] = useState<Comment[]>([])
     const [deleteDialog, setDeleteDialog] = useState(false)
     const [commentsLoading, setCommentsLoading] = useState(true)
+    const [showPaymentDialog, setShowPaymentDialog] = useState(false)
     const [packet, setPropertyPacket] = useState<PropertyPackage | null>(null)
     const fetchAllComments = async () => {
         setCommentsLoading(true)
@@ -86,6 +89,7 @@ export default function CatalogItem() {
     }, [searchParams])
     return (
         <>
+            {showPaymentDialog && <RouteToPaymentGateway id={paymentId} onClose={() => setShowPaymentDialog(false)} product={packet!} />}
             <OpenChainsDialog className={''}
                 onCloseDialog={() => {
                     setHideDialog(false)
@@ -220,6 +224,8 @@ export default function CatalogItem() {
                                                             <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
                                                                 onClick={() => {
                                                                     if (!packet.property.owner.cashPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
+                                                                    setPaymentId("cash")
+                                                                    setShowPaymentDialog(true)
                                                                 }}>
                                                                 <Image src='/images/logos/cash.jpg' className='  rounded-3xl w-32 h-14' alt='ecocash'
                                                                     width={556}
@@ -231,6 +237,8 @@ export default function CatalogItem() {
                                                             <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
                                                                 onClick={() => {
                                                                     if (!packet.property.owner.ecocashPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
+                                                                    setPaymentId("ecocash")
+                                                                    setShowPaymentDialog(true)
                                                                 }}>
                                                                 <Image src='/images/logos/ecocash.jpg' className='  rounded-3xl w-32 h-14' alt='ecocash'
                                                                     width={556}
@@ -242,6 +250,8 @@ export default function CatalogItem() {
                                                             <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
                                                                 onClick={() => {
                                                                     if (!packet.property.owner.mukuruPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
+                                                                    setPaymentId("mukuru")
+                                                                    setShowPaymentDialog(true)
                                                                 }}>
                                                                 <Image src='/images/logos/mukuru.jpg' className=' rounded-3xl w-32 h-14' alt='ecocash'
                                                                     width={556}
