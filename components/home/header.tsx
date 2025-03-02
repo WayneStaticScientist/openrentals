@@ -9,7 +9,6 @@ export default function HeaderView({ page, sub }: { page: string, sub?: string |
     const [loggedIn, setLoggedIn] = useState(false)
     const [staticClass, setStaticClass] = useState(false)
     const handleScroll = () => {
-        console.log(window.scrollY)
         if (window.scrollY > 400) {
             if (!staticClass)
                 setStaticClass(true)

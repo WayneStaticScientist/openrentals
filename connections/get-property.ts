@@ -5,7 +5,7 @@ import { showError } from "@/functions/toast";
 
 export async function getProductById(id: string) {
     try {
-        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + "v1/catalog?id=" + id, {
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + "v1/property/catalog?id=" + id, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -515,6 +515,75 @@ export async function UpdateMukuruState(data: MukuruPayment) {
                 },
                 method: "PUT",
                 body: JSON.stringify(data),
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}
+export async function syncProductWithUser(id: string) {
+    try {
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/property/sync?id=' + id,
+            {
+                headers: {
+                    "X-device-id": getDeviceId(),
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + getVariables().refreshTokens,
+                },
+                method: "GET",
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}
+export async function AddPayment(body: object) {
+    try {
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/property/pay',
+            {
+                headers: {
+                    "X-device-id": getDeviceId(),
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + getVariables().refreshTokens,
+                },
+                method: "POST",
+                body: JSON.stringify(body)
             }
         )
         if (api.ok) {

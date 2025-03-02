@@ -1,32 +1,38 @@
-import FooterView from '@/components/home/footer';
-import { deleteItem, getComments, getProductById, hideItem, postPropertyComment } from '@/connections/get-property';
-import { Comment, PropertyPackage } from '@/connections/interfaces';
-import { showError, showSuccess } from '@/functions/toast';
-import dynamic from 'next/dynamic';
 import Router from 'next/router';
-import React, { useEffect, useRef, useState } from 'react'
-import { CgSmile, CgSpinner } from 'react-icons/cg';
-import { ProgressBar } from 'react-loader-spinner';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { ToastContainer } from 'react-toastify';
 import ImageGallery from "react-image-gallery";
-import "react-image-gallery/styles/css/image-gallery.css";
+import { FaBed, FaComment, FaEye, FaPhone } from 'react-icons/fa';
+import FooterView from '@/components/home/footer';
+import { ProgressBar } from 'react-loader-spinner';
+import { CgSmile, CgSpinner } from 'react-icons/cg';
+import { useSearchParams } from 'next/navigation';
 import { formatAmount } from '@/functions/formats';
-import { FaEye, FaPhone } from 'react-icons/fa';
+import BannerPage from '@/components/pages/banner-page';
+import React, { useEffect, useRef, useState } from 'react'
+import "react-image-gallery/styles/css/image-gallery.css";
+import { showError, showSuccess } from '@/functions/toast';
+import CommentList from '@/components/pages/widgets/comments-list';
 import { MdDelete, MdEmail, MdOutlineHideSource } from 'react-icons/md';
 import OpenChainsDialog from '@/components/pages/widgets/open-chains-dialog';
-import BannerPage from '@/components/pages/banner-page';
-import { useSearchParams } from 'next/navigation';
-import CommentList from '@/components/pages/widgets/comments-list';
-import Image from 'next/image';
 import { RouteToPaymentGateway } from '@/components/pages/forms/payment-forms';
+import { CatalogueHold, Comment, PropertyPackage } from '@/connections/interfaces';
 const HeaderView = dynamic(() => import('@/components/home/header'), { ssr: false });
+import { deleteItem, getComments, getProductById, hideItem, postPropertyComment, syncProductWithUser } from '@/connections/get-property';
+import BoughtComponent from '@/components/bought';
+import { FaBath } from 'react-icons/fa6';
+import { BiArea } from 'react-icons/bi';
+import { getUser } from '@/functions/device';
 export default function CatalogItem() {
     const searchParams = useSearchParams();
     const imgRef = useRef<ImageGallery>(null)
     const [message, setMessage] = useState("")
     const [comment, setComment] = useState("")
+    const [bought, setBought] = useState<CatalogueHold | null>(null)
     const [loading, setLoading] = useState(true)
     const [showMore, setShowMore] = useState(false)
+    const [resyncing, setResynching] = useState(false)
     const [paymentId, setPaymentId] = useState("cash")
     const [hideDialog, setHideDialog] = useState(false)
     const [commenting, setCommenting] = useState(false)
@@ -42,6 +48,13 @@ export default function CatalogItem() {
         setCommentsLoading(false)
         if (typeof response === 'string') return
         return setComments(response)
+    }
+    const resyncProduct = async () => {
+        setResynching(true)
+        const resp = await syncProductWithUser(searchParams.get("q") ?? '')
+        setResynching(false)
+        if (typeof resp === 'string') return showError(resp)
+        showSuccess("Resync success ? Reload the page to see changes")
     }
     const postComment = async () => {
         if (commenting) return
@@ -72,8 +85,16 @@ export default function CatalogItem() {
         Router.replace("/uploads")
         return showSuccess("The item is successfully deleted successfully ")
     }
+    const check_bought = () => {
+        const user = getUser()
+        if (!user) return
+        if (user.catalogsItems && searchParams.get("q")) {
+            setBought(user.catalogsItems.find(e => e.id === (searchParams.get("q") ?? '')) ?? null)
+            console.log("found ", user.catalogsItems);
+        }
+    }
     const fetch_item = async (id: string) => {
-        if (id.length === 0) return
+        if (id.length === 0 || !searchParams.get("q")) return
         setLoading(true)
         const data = await getProductById(id)
         setLoading(false)
@@ -82,6 +103,7 @@ export default function CatalogItem() {
             return showError(data)
         }
         setPropertyPacket(data)
+        check_bought()
         fetchAllComments()
     }
     useEffect(() => {
@@ -89,7 +111,10 @@ export default function CatalogItem() {
     }, [searchParams])
     return (
         <>
-            {showPaymentDialog && <RouteToPaymentGateway id={paymentId} onClose={() => setShowPaymentDialog(false)} product={packet!} />}
+            {showPaymentDialog && <RouteToPaymentGateway id={paymentId} onClose={() => {
+                check_bought()
+                setShowPaymentDialog(false)
+            }} product={packet!} />}
             <OpenChainsDialog className={''}
                 onCloseDialog={() => {
                     setHideDialog(false)
@@ -171,103 +196,130 @@ export default function CatalogItem() {
                                 </div>
                                 <div className="container">
                                     <div className="row">
-
                                         {/* <!-- Property Description --> */}
                                         <div className="col-lg-8 col-md-7">
                                             {/* <!-- Titlebar --> */}
-                                            <div id="titlebar-dtl-item" className="property-titlebar margin-bottom-0">
+                                            <div id="titlebar-dtl-item" className="shadow-sm margin-bottom-0 p-6">
                                                 <div className="property-title">
                                                     <div className='flex flex-wrap gap-x-5'>
-                                                        <div className="property-pricing">${formatAmount(packet.property.price, 2)}
-                                                            {packet.property.propertyState === 'rent' && <div className='text-white inline'>/{packet.property.propertyInstallments}</div>
+                                                        <div className="text-5xl text-green-500">${formatAmount(packet.property.price, 2)}
+                                                            {packet.property.propertyState === 'rent' && <div className='text-primary inline'>/{packet.property.propertyInstallments}</div>
                                                             }
                                                         </div>
-                                                        <div className=" flex flex-row gap-x-3 items-center "><FaEye />{formatAmount(packet.property.views, 0)} views</div>
                                                     </div>
                                                     <h2>{packet.property.propertyTitle} <span className="property-badge-sale">For {packet.property.propertyState} </span></h2>
+                                                    <div className='flex gap-x-5 '>
+                                                        <div className=" flex flex-row gap-x-3 items-center "><FaEye />{formatAmount(packet.property.views, 0)} views</div>
+                                                        <div className=" flex flex-row gap-x-3 items-center "><FaComment />{formatAmount(0, 0)} comments</div>
+                                                    </div>
                                                     <span className="utf-listing-address"><i className="icon-material-outline-location-on"></i>
                                                         {packet.property.address} {packet.property.city}
                                                     </span>
-                                                    <ul className="property-main-features">
-                                                        <li>Baths<span>{packet.property.bathrooms}</span></li>
-                                                        <li>Beds<span>{packet.property.bedrooms}</span></li>
-                                                        <li>Area<span>{packet.property.area}</span></li>
-                                                    </ul>
+                                                    <hr />
+                                                    <div className="gap-x-6 flex flex-wrap">
+                                                        <li className='flex gap-x-2 items-center'> <FaBath /> Baths<span>{packet.property.bathrooms}</span></li>
+                                                        <li className='flex gap-x-2 items-center'><FaBed /> Beds<span> {packet.property.bedrooms}</span></li>
+                                                        <li className='flex gap-x-2 items-center'><BiArea /> Area<span>{packet.property.area}</span></li>
+                                                    </div>
                                                 </div>
                                                 {packet.owned ?
-                                                    <div className='flex gap-x-8 items-center flex-wrap p-3 mt-8'>
-                                                        <button className='gap-2 flex items-center p-3 rounded-xl bg-red-600 text-white'
-                                                            onClick={() => setDeleteDialog(true)}>
-                                                            <MdDelete /> delete</button>
-                                                        {
-                                                            packet.property.hidden ?
-                                                                <button className='gap-2 flex items-center p-3 rounded-xl bg-green-500 text-white'
-                                                                    onClick={() => setHideDialog(true)}>
-                                                                    {
-                                                                        loadingHide ?
-                                                                            <CgSpinner className='animate-spin' /> :
-                                                                            <><MdOutlineHideSource />Show</>
-                                                                    }</button>
-                                                                :
-                                                                <button className='gap-2 flex items-center p-3 rounded-xl bg-orange-600 text-white'
-                                                                    onClick={() => setHideDialog(true)}>
-                                                                    {
-                                                                        loadingHide ?
-                                                                            <CgSpinner className='animate-spin' /> :
-                                                                            <><MdOutlineHideSource />hide</>
-                                                                    }</button>
-                                                        }
+                                                    <div>
+                                                        <div className='flex gap-x-8 items-center flex-wrap p-3 mt-8'>
+                                                            <button className='gap-2 flex items-center p-3 rounded-xl bg-red-600 text-white'
+                                                                onClick={() => setDeleteDialog(true)}>
+                                                                <MdDelete /> delete</button>
+                                                            {
+                                                                packet.property.hidden ?
+                                                                    <button className='gap-2 flex items-center p-3 rounded-xl bg-green-500 text-white'
+                                                                        onClick={() => setHideDialog(true)}>
+                                                                        {
+                                                                            loadingHide ?
+                                                                                <CgSpinner className='animate-spin' /> :
+                                                                                <><MdOutlineHideSource />Show</>
+                                                                        }</button>
+                                                                    :
+                                                                    <button className='gap-2 flex items-center p-3 rounded-xl bg-orange-600 text-white'
+                                                                        onClick={() => setHideDialog(true)}>
+                                                                        {
+                                                                            loadingHide ?
+                                                                                <CgSpinner className='animate-spin' /> :
+                                                                                <><MdOutlineHideSource />hide</>
+                                                                        }</button>
+                                                            }
+                                                        </div>
+                                                        <div className=' cursor-pointer w-full  p-6 justify-between flex items-center border-t-2 border-[#00000011]'>
+                                                            <span>{packet.property.paymentRequests} Payment requests</span>
+                                                            <button className='button'>view all</button>
+                                                        </div>
                                                     </div>
                                                     :
-                                                    <div className='mt-12 flex flex-wrap gap-x-6'>
-                                                        {packet.property.cash === "1" &&
-                                                            <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
-                                                                onClick={() => {
-                                                                    if (!packet.property.owner.cashPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
-                                                                    setPaymentId("cash")
-                                                                    setShowPaymentDialog(true)
-                                                                }}>
-                                                                <Image src='/images/logos/cash.jpg' className='  rounded-3xl w-32 h-14' alt='ecocash'
-                                                                    width={556}
-                                                                    height={212}
-                                                                />
-                                                            </div>
+                                                    <>
+                                                        {
+                                                            bought ?
+                                                                <div className='mt-8'>
+                                                                    <BoughtComponent state={bought} />
+                                                                </div> :
+                                                                <div className='mt-12 flex flex-wrap gap-x-6'>
+                                                                    {packet.property.cash === "1" &&
+                                                                        <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
+                                                                            onClick={() => {
+                                                                                if (!packet.property.owner.cashPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
+                                                                                setPaymentId("cash")
+                                                                                setShowPaymentDialog(true)
+                                                                            }}>
+                                                                            <Image src='/images/logos/cash.jpg' className='  rounded-3xl w-32 h-14' alt='ecocash'
+                                                                                width={556}
+                                                                                height={212}
+                                                                            />
+                                                                        </div>
+                                                                    }
+                                                                    {packet.property.ecocash === "1" &&
+                                                                        <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
+                                                                            onClick={() => {
+                                                                                if (!packet.property.owner.ecocashPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
+                                                                                setPaymentId("ecocash")
+                                                                                setShowPaymentDialog(true)
+                                                                            }}>
+                                                                            <Image src='/images/logos/ecocash.jpg' className='  rounded-3xl w-32 h-14' alt='ecocash'
+                                                                                width={556}
+                                                                                height={212}
+                                                                            />
+                                                                        </div>
+                                                                    }
+                                                                    {packet.property.mukuru === "1" &&
+                                                                        <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
+                                                                            onClick={() => {
+                                                                                if (!packet.property.owner.mukuruPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
+                                                                                setPaymentId("mukuru")
+                                                                                setShowPaymentDialog(true)
+                                                                            }}>
+                                                                            <Image src='/images/logos/mukuru.jpg' className=' rounded-3xl w-32 h-14' alt='ecocash'
+                                                                                width={556}
+                                                                                height={212}
+                                                                            />
+                                                                        </div>
+                                                                    }
+                                                                </div>
                                                         }
-                                                        {packet.property.ecocash === "1" &&
-                                                            <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
-                                                                onClick={() => {
-                                                                    if (!packet.property.owner.ecocashPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
-                                                                    setPaymentId("ecocash")
-                                                                    setShowPaymentDialog(true)
-                                                                }}>
-                                                                <Image src='/images/logos/ecocash.jpg' className='  rounded-3xl w-32 h-14' alt='ecocash'
-                                                                    width={556}
-                                                                    height={212}
-                                                                />
-                                                            </div>
-                                                        }
-                                                        {packet.property.mukuru === "1" &&
-                                                            <div className='p-3 bg-white rounded-3xl w-fit h-20 cursor-pointer'
-                                                                onClick={() => {
-                                                                    if (!packet.property.owner.mukuruPayment) return showError("User has not set payment method for this option YET? Contact Him/Her")
-                                                                    setPaymentId("mukuru")
-                                                                    setShowPaymentDialog(true)
-                                                                }}>
-                                                                <Image src='/images/logos/mukuru.jpg' className=' rounded-3xl w-32 h-14' alt='ecocash'
-                                                                    width={556}
-                                                                    height={212}
-                                                                />
-                                                            </div>
-                                                        }
+                                                    </>
+
+                                                }
+                                                {packet.owned && packet.property.resyncError &&
+                                                    <div className='notification error  flex flex-col'>
+                                                        Your product contains resync errors . The payment details are different to ones which you registered with
+                                                        <button className='button'
+                                                            onClick={() => !resyncing && resyncProduct()}>{
+                                                                resyncing ? <CgSpinner className='w-full text-center' /> : <>Resync Now</>}</button>
                                                     </div>
                                                 }
                                             </div>
 
                                             <div className="property-description">
                                                 {/* <!-- Description --> */}
-                                                <div className="utf-desc-headline-item">
-                                                    <h3><i className="icon-material-outline-description"></i> Property Description</h3>
+                                                <div className="">
+                                                    <h3 className='font-bold'><i className="icon-material-outline-description"></i> Property Description</h3>
                                                 </div>
+                                                <hr />
                                                 <div className={showMore ? '' : "show-more"}>
                                                     {packet.property.description}
                                                     <button onClick={() => {

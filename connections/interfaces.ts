@@ -12,7 +12,10 @@ export interface Notification {
     message: string
     notificationId: string
 }
-
+export interface CatalogueHold {
+    id: string
+    status: number
+}
 export interface User {
     email: string
     phone: string
@@ -30,6 +33,7 @@ export interface User {
     proofOfResidence: number
     idNumberVerified: number
     notificationSize: number
+    catalogsItems: CatalogueHold[]
     documentsResidence: string
     notifications: Notification[]
     notificationClearTime: number
@@ -89,8 +93,10 @@ export interface Property {
     description: string
     electricity: string
     propertyType: string
+    resyncError: boolean
     propertyState: string
     propertyTitle: string
+    paymentRequests: number
     propertyInstallments: string
 }
 export interface PropertyList {
@@ -132,4 +138,12 @@ export interface Comment {
     comment: string
     _id: string
     subComments: Comment[]
+}
+export interface PaymentHold {
+    id: string
+    type: string
+    email: string
+    status: number
+    profile: string
+    fullName: string
 }

@@ -1,4 +1,4 @@
-import { getDeviceId, getVariables, setUser, setVariables } from "@/functions/device";
+import { clearSavedLogss, getDeviceId, getVariables, setUser, setVariables } from "@/functions/device";
 import { Tokens, User } from "./interfaces";
 import { create } from "zustand";
 import { StaticStates } from "@/functions/static-states";
@@ -92,6 +92,7 @@ export class UserRegistration {
                 if (data.retry) return this.requestNewTokens(data)
                 return "you are not authorized to use this platform"
             }
+            clearSavedLogss()
             return this.getExtractError(api)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
@@ -115,6 +116,7 @@ export class UserRegistration {
                 intercept.retry = false
                 return await this.fetchUser(intercept)
             }
+            clearSavedLogss()
             return this.getExtractError(api)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
@@ -124,22 +126,23 @@ export class UserRegistration {
 }
 export const useUserState = create<User>(() => ({
     firstName: "",
-    notificationClearTime: 0,
-    idNumberVerified: 0,
-    emailVerified: false,
-    proofOfResidence: 0,
     lastName: "",
     city: "",
-    documentsID: "",
-    documentsResidence: "",
     address: "",
-    notifications: [],
-    notificationSize: 0,
     email: "",
     phone: "",
     message: "",
     idNumber: "",
+    profile: "",
     userTitle: "",
     verified: false,
-    profile: ""
+    documentsID: "",
+    notifications: [],
+    catalogsItems: [],
+    idNumberVerified: 0,
+    proofOfResidence: 0,
+    notificationSize: 0,
+    emailVerified: false,
+    documentsResidence: "",
+    notificationClearTime: 0,
 }))
