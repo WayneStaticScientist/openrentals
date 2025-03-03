@@ -142,7 +142,10 @@ export interface Comment {
 export interface PaymentHold {
     id: string
     type: string
+    image: string
     email: string
+    title: string
+    price: number
     status: number
     profile: string
     fullName: string

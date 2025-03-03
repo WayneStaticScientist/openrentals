@@ -468,6 +468,7 @@ export async function UpdateEcocashState(data: object) {
         return 'There was network error'
     }
 }
+
 export async function UpdateCashState(data: object) {
     try {
         const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/user/register/cash',
@@ -584,6 +585,73 @@ export async function AddPayment(body: object) {
                 },
                 method: "POST",
                 body: JSON.stringify(body)
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}
+export async function GetMyListings() {
+    try {
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/user/mylistings/get',
+            {
+                headers: {
+                    "X-device-id": getDeviceId(),
+                    "Authorization": "Bearer " + getVariables().refreshTokens,
+                },
+                method: "GET",
+            }
+        )
+        if (api.ok) {
+            return await api.json()
+        }
+        if (api.status === 401) {
+            return 'Unauthorized'
+        }
+        if (api.status === 500) {
+            return 'Server Error'
+        }
+        if (api.status === 404) {
+            return 'Not Found'
+        }
+        if (api.status === 400) {
+            const { message } = await api.json()
+            return message
+        }
+        return 'There was error ' + api.status
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+        return 'There was network error'
+    }
+}
+export async function GetAdminPaymentListings(page: number, id: string, email: string) {
+    console.log(id);
+    try {
+        const api = await fetch(`${process.env.NEXT_PUBLIC_SERVER}` + 'v1/user/payments/get/admin?page=' + page + '&id=' + id + '&email=' + email,
+            {
+                headers: {
+                    "X-device-id": getDeviceId(),
+                    "Authorization": "Bearer " + getVariables().refreshTokens,
+                },
+                method: "GET",
             }
         )
         if (api.ok) {

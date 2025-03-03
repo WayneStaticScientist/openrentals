@@ -32,7 +32,8 @@ export default function ProfileReview({ page }: { page: string }) {
                             imageError ? "images/default/nouser.jpg" :
                                 user.profile.length > 3 ? `${process.env.NEXT_PUBLIC_SERVERT}${user.profile}` : "images/default/nouser.jpg"} alt="" onError={() => {
                                     setImageError(true)
-                                }} />
+                                }}
+                        />
 
                     </div>
                 </div>
@@ -42,7 +43,7 @@ export default function ProfileReview({ page }: { page: string }) {
                         <ul className="user-account-nav-menu">
                             <li><Link href="/myprofile" className={page == 'myprofile' ? "current" : ""}>
                                 <i className="sl sl-icon-user"></i> My Profile</Link></li>
-                            <li><Link href="/" className={page == 'bookmarks' ? "current" : ""}><i className="sl sl-icon-star"></i> Bookmark Listing</Link></li>
+                            <li><Link href="/bookmarks" className={page == 'bookmarks' ? "current" : ""}><i className="sl sl-icon-star"></i> Bookmark Listing</Link></li>
                             <li><Link href="/uploads" className={page == 'uploads' ? "current" : ""}><i className="sl sl-icon-docs"></i> My Property</Link>
                             </li>
                             <li className='relative'><Link href="/notifications" className={page == 'notifications' ? "current" : ""}><i className="sl sl-icon-docs"></i>Notifications
@@ -57,8 +58,9 @@ export default function ProfileReview({ page }: { page: string }) {
                             </Link>
                             </li>
                             <li><Link href="/upload" className={page == 'upload' ? "current" : ""}><i className="sl sl-icon-action-redo"></i> New Property</Link></li>
-                            <li><a href="/user/payment-setup"><i className="sl sl-icon-wallet"></i>Payment Setup</a></li>
-                            <li><a href="change-password.html"><i className="sl sl-icon-lock"></i> Change Password</a></li>
+                            <li><Link href="/user/payment-setup"><i className="sl sl-icon-wallet"></i>Payment Setup</Link></li>
+                            <li><Link href="/user/request"><i className="sl sl-icon-wallet"></i>Payments</Link></li>
+                            <li><Link href="/"><i className="sl sl-icon-lock"></i> Change Password</Link></li>
                             <li><button onClick={() => setDialog(true)}><i className="sl sl-icon-power"></i> Log Out</button></li>
                         </ul>
                     </div>
